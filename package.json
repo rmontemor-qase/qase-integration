@@ -1,0 +1,18 @@
+{
+  "name": "playwright-qase-integration",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env QASE_MODE=testops npx playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3",
+    "cross-env": "^10.1.0",
+    "playwright-qase-reporter": "^2.1.6"
+  }
+}
