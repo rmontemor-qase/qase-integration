@@ -1,3 +1,6 @@
+// Copy to playwright.config.js and set your Qase API token.
+// playwright.config.js is gitignored to keep tokens out of the repo.
+
 const config = {
   workers: 8,
   fullyParallel: true,
@@ -12,16 +15,13 @@ const config = {
       'playwright-qase-reporter',
       {
         debug: false,
-
         testops: {
           api: {
-            token: 'f447c8bf425837227704d402749969a9705538691eadabb83f17443c02b81953',
+            token: process.env.QASE_API_TOKEN || 'your-qase-api-token-here',
           },
-
-          project: 'TTE',
+          project: 'YOUR_PROJECT_CODE',
           uploadAttachments: true,
           showPublicReportLink: true,
-
           run: {
             complete: true,
           },
