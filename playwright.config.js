@@ -1,7 +1,4 @@
-// Base URL is defined here (test/code level), not from CI.
-// CI sets QASE_TESTOPS_* env vars from workflow inputs/secrets.
-// Local: copy to playwright.config.js and set token or use env.
-// playwright.config.js is gitignored to keep tokens out of the repo.
+require('dotenv').config();
 
 const config = {
   workers: 8,
@@ -19,13 +16,13 @@ const config = {
         debug: false,
         testops: {
           api: {
-            token: process.env.QASE_TESTOPS_API_TOKEN || process.env.QASE_API_TOKEN || 'your-qase-api-token-here',
+            token: process.env.QASE_TESTOPS_API_TOKEN || process.env.QASE_API_TOKEN,
           },
-          project: process.env.QASE_TESTOPS_PROJECT || 'YOUR_PROJECT_CODE',
+          project: 'TTE',
           uploadAttachments: true,
           showPublicReportLink: true,
           run: {
-            complete: process.env.QASE_TESTOPS_RUN_COMPLETE !== 'false',
+            complete: true,
           },
         },
         framework: {

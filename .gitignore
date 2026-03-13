@@ -1,6 +1,6 @@
 
 # Playwright
-playwright.config.js
+.env
 node_modules/
 /test-results/
 /playwright-report/
