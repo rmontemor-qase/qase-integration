@@ -1,19 +1,30 @@
-# Secrets: QASE_API_TOKEN (Settings > Secrets and variables > Actions > Secrets).
-# Variables: BASE_URL, QASE_PROJECT (Settings > Secrets and variables > Actions > Variables).
-# No inputs required — safe to trigger from external platforms.
+# Base URL: defined in playwright.config.example.js (test code), not here.
+# Token: secret QASE_API_TOKEN. Qase params: workflow_dispatch inputs below.
 
 name: Qase Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      qase_api_base_url:
+        description: 'Qase API URL'
+        required: true
+      qase_project_code:
+        description: 'Qase project code'
+        required: true
+      qase_run_id:
+        description: 'Qase Run ID'
+        required: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      BASE_URL: ${{ vars.BASE_URL }}
-      QASE_PROJECT: ${{ vars.QASE_PROJECT }}
-      QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+      QASE_API_BASE_URL: ${{ inputs.qase_api_base_url }}
+      QASE_TESTOPS_PROJECT: ${{ inputs.qase_project_code }}
+      QASE_TESTOPS_RUN_ID: ${{ inputs.qase_run_id }}
+      QASE_TESTOPS_RUN_COMPLETE: true
+      QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
       QASE_MODE: testops
 
     steps:
