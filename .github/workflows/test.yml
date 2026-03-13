@@ -1,6 +1,3 @@
-# Base URL: defined in playwright.config.example.js (test code), not here.
-# Token: secret QASE_API_TOKEN. Qase params: workflow_dispatch inputs below.
-
 name: Qase Tests
 
 on:
@@ -9,11 +6,17 @@ on:
       qase_api_base_url:
         description: 'Qase API URL'
         required: true
+      qase_report:
+        description: 'Enabled/disabled reporting to Qase'
+        required: true
       qase_project_code:
         description: 'Qase project code'
         required: true
       qase_run_id:
         description: 'Qase Run ID'
+        required: true
+      qase_run_complete:
+        description: 'Qase Run autocomplete'
         required: true
 
 jobs:
@@ -25,7 +28,6 @@ jobs:
       QASE_TESTOPS_RUN_ID: ${{ inputs.qase_run_id }}
       QASE_TESTOPS_RUN_COMPLETE: true
       QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-      QASE_MODE: testops
 
     steps:
       - name: Checkout code
@@ -44,7 +46,9 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run tests
-        run: npx playwright test --config=playwright.config.example.js
+        run: npm test
+        env:
+          QASE_MODE: testops
 
       - name: Upload test results
         if: always()
