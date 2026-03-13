@@ -1,55 +1,40 @@
+# Secrets: QASE_API_TOKEN (Settings > Secrets and variables > Actions > Secrets).
+# Variables: BASE_URL, QASE_PROJECT (Settings > Secrets and variables > Actions > Variables).
+# No inputs required — safe to trigger from external platforms.
+
 name: Qase Tests
 
 on:
   workflow_dispatch:
-    inputs:
-      qase_api_base_url:
-        description: 'Qase API URL'
-        required: true
-      qase_report:
-        description: 'Enabled/disabled reporting to Qase'
-        required: true
-      qase_project_code:
-        description: 'Qase project code'
-        required: true
-      qase_run_id:
-        description: 'Qase Run ID'
-        required: true
-      qase_run_complete:
-        description: 'Qase Run autocomplete'
-        required: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      QASE_API_BASE_URL: ${{ inputs.qase_api_base_url }}
-      QASE_TESTOPS_PROJECT: ${{ inputs.qase_project_code }}
-      QASE_TESTOPS_RUN_ID: ${{ inputs.qase_run_id }}
-      QASE_TESTOPS_RUN_COMPLETE: true
-      QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
-    
+      BASE_URL: ${{ vars.BASE_URL }}
+      QASE_PROJECT: ${{ vars.QASE_PROJECT }}
+      QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+      QASE_MODE: testops
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      
+
       - name: Run tests
-        run: npm test
-        env:
-          QASE_MODE: testops
-      
+        run: npx playwright test --config=playwright.config.example.js
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,7 +42,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-      
+
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4

@@ -1,11 +1,12 @@
-// Copy to playwright.config.js and set your Qase API token.
+// CI: used with env vars (QASE_API_TOKEN secret, BASE_URL + QASE_PROJECT from inputs/vars).
+// Local: copy to playwright.config.js and set env or edit the fallbacks below.
 // playwright.config.js is gitignored to keep tokens out of the repo.
 
 const config = {
   workers: 8,
   fullyParallel: true,
   use: {
-    baseURL: 'https://test-track-express.lovable.app',
+    baseURL: process.env.BASE_URL || 'https://test-track-express.lovable.app',
     screenshot: 'on',
     video: 'on',
   },
@@ -19,7 +20,7 @@ const config = {
           api: {
             token: process.env.QASE_API_TOKEN || 'your-qase-api-token-here',
           },
-          project: 'YOUR_PROJECT_CODE',
+          project: process.env.QASE_PROJECT || 'YOUR_PROJECT_CODE',
           uploadAttachments: true,
           showPublicReportLink: true,
           run: {
