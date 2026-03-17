@@ -24,6 +24,7 @@ jobs:
   core-regression:
     runs-on: ubuntu-latest
     env:
+      QASE_MODE: testops
       QASE_API_BASE_URL: ${{ inputs.qase_api_base_url }}
       QASE_TESTOPS_PROJECT: ${{ inputs.qase_project_code }}
       QASE_TESTOPS_RUN_ID: ${{ inputs.qase_run_id }}
@@ -47,7 +48,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run core regression tests
-        run: cross-env QASE_MODE=testops npx playwright test --project=core-regression
+        run: npx playwright test --project=core-regression
 
       - name: Upload test results
         if: always()
