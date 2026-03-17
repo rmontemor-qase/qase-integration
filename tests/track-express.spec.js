@@ -4,8 +4,8 @@ import { test, expect } from '@playwright/test';
 /** Short delay so screenshots and video capture each step clearly (evidence). */
 const stepDelay = (p) => p.waitForTimeout(1200);
 
-test.describe('1. Hero Section', () => {
-  test('Hero section, image, and engineering copy', async ({ page }) => {
+test.describe('Hero Section', () => {
+  test('Hero section, image, and engineering copy @smoke', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(800);
     const hero = page.getByTestId('hero-section');
@@ -19,7 +19,7 @@ test.describe('1. Hero Section', () => {
     await stepDelay(page);
   });
 
-  test('CTA navigation to Schedule and Team', async ({ page }) => {
+  test('CTA navigation to Schedule and Team @smoke', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(600);
     await page.getByTestId('start-engine-btn').click();
@@ -35,8 +35,8 @@ test.describe('1. Hero Section', () => {
   });
 });
 
-test.describe('2. Form Section', () => {
-  test('All fields visible and submit disabled', async ({ page }) => {
+test.describe('Form Section', () => {
+  test('All fields visible and submit disabled @smoke', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(500);
     await page.getByTestId('form-section').scrollIntoViewIfNeeded();
@@ -52,7 +52,7 @@ test.describe('2. Form Section', () => {
     await stepDelay(page);
   });
 
-  test('Fill, slider, submit, success message, and reset', async ({ page }) => {
+  test('Fill, slider, submit, success message, and reset @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('form-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -82,8 +82,8 @@ test.describe('2. Form Section', () => {
   });
 });
 
-test.describe('3a. Design Iteration Counter', () => {
-  test('Counter increment, decrement, and reset', async ({ page }) => {
+test.describe('Design Iteration Counter', () => {
+  test('Counter increment, decrement, and reset @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -108,8 +108,8 @@ test.describe('3a. Design Iteration Counter', () => {
   });
 });
 
-test.describe('3b. Active Aero Toggle', () => {
-  test('DRS toggle and toast notification', async ({ page }) => {
+test.describe('Active Aero Toggle', () => {
+  test('DRS toggle and toast notification @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -134,8 +134,8 @@ test.describe('3b. Active Aero Toggle', () => {
   });
 });
 
-test.describe('3c. Test Schedule List', () => {
-  test('Add item, Enter key, remove item', async ({ page }) => {
+test.describe('Test Schedule List', () => {
+  test('Add item, Enter key, remove item @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -161,7 +161,7 @@ test.describe('3c. Test Schedule List', () => {
     await stepDelay(page);
   });
 
-  test('Empty add does not change count', async ({ page }) => {
+  test('Empty add does not change count @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -173,8 +173,8 @@ test.describe('3c. Test Schedule List', () => {
   });
 });
 
-test.describe('3d. Performance Metrics', () => {
-  test('Hover states for telemetry cards', async ({ page }) => {
+test.describe('Performance Metrics', () => {
+  test('Hover states for telemetry cards @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -195,8 +195,8 @@ test.describe('3d. Performance Metrics', () => {
   });
 });
 
-test.describe('3e. Engineering Brief Modal', () => {
-  test('Open, content, close by button and overlay', async ({ page }) => {
+test.describe('Engineering Brief Modal', () => {
+  test('Open, content, close by button and overlay @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -219,8 +219,8 @@ test.describe('3e. Engineering Brief Modal', () => {
   });
 });
 
-test.describe('4. Component Registry Table', () => {
-  test('Table, filter, clear, sort, and status badges', async ({ page }) => {
+test.describe('Component Registry Table', () => {
+  test('Table, filter, clear, sort, and status badges @core-regression', async ({ page }) => {
     await page.goto('/');
     await page.getByTestId('table-section').scrollIntoViewIfNeeded();
     await stepDelay(page);
@@ -251,8 +251,8 @@ test.describe('4. Component Registry Table', () => {
   });
 });
 
-test.describe('5. Development Timeline Page', () => {
-  test('Page, milestones, names, statuses, nav links', async ({ page }) => {
+test.describe('Development Timeline Page', () => {
+  test('Page, milestones, names, statuses, nav links @smoke', async ({ page }) => {
     await page.goto('/schedule');
     await stepDelay(page);
     await expect(page.getByTestId('schedule-page')).toBeVisible();
@@ -271,7 +271,7 @@ test.describe('5. Development Timeline Page', () => {
     await stepDelay(page);
   });
 
-  test('Back home and Team link from schedule', async ({ page }) => {
+  test('Back home and Team link from schedule @core-regression', async ({ page }) => {
     await page.goto('/schedule');
     await stepDelay(page);
     await page.getByTestId('back-home-link').click();
@@ -284,8 +284,8 @@ test.describe('5. Development Timeline Page', () => {
   });
 });
 
-test.describe('6. Engineering Team Page', () => {
-  test('Page, members, names, roles, numbers, bios, nav', async ({ page }) => {
+test.describe('Engineering Team Page', () => {
+  test('Page, members, names, roles, numbers, bios, nav @smoke', async ({ page }) => {
     await page.goto('/team');
     await stepDelay(page);
     await expect(page.getByTestId('team-page')).toBeVisible();
@@ -309,7 +309,7 @@ test.describe('6. Engineering Team Page', () => {
     await stepDelay(page);
   });
 
-  test('Back home and Schedule link from team', async ({ page }) => {
+  test('Back home and Schedule link from team @core-regression', async ({ page }) => {
     await page.goto('/team');
     await stepDelay(page);
     await page.getByTestId('back-home-link').click();
@@ -322,8 +322,8 @@ test.describe('6. Engineering Team Page', () => {
   });
 });
 
-test.describe('7. Footer', () => {
-  test('Visible with Velocity Racing branding', async ({ page }) => {
+test.describe('Footer', () => {
+  test('Visible with Velocity Racing branding @full-regression', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(500);
     await page.getByTestId('footer').scrollIntoViewIfNeeded();
@@ -334,15 +334,15 @@ test.describe('7. Footer', () => {
   });
 });
 
-test.describe('8. Routing & 404', () => {
-  test('404 not found page renders', async ({ page }) => {
+test.describe('Routing & 404', () => {
+  test('404 not found page renders @full-regression', async ({ page }) => {
     await page.goto('/nonexistent');
     await stepDelay(page);
     await expect(page.getByText(/404|not found|page not found/i)).toBeVisible({ timeout: 10000 });
     await stepDelay(page);
   });
 
-  test('Full home tour — Hero to form to dashboard to table to footer', async ({ page }) => {
+  test('Full home tour — Hero to form to dashboard to table to footer @full-regression', async ({ page }) => {
     await page.goto('/');
     await stepDelay(page);
     await expect(page.getByTestId('hero-section')).toBeVisible();
@@ -367,7 +367,7 @@ test.describe('8. Routing & 404', () => {
     await stepDelay(page);
   });
 
-  test('Cross-navigation — Home → Schedule → Team → Home', async ({ page }) => {
+  test('Cross-navigation — Home → Schedule → Team → Home @full-regression', async ({ page }) => {
     await page.goto('/');
     await stepDelay(page);
     await page.getByTestId('start-engine-btn').click();
@@ -387,7 +387,7 @@ test.describe('8. Routing & 404', () => {
     await stepDelay(page);
   });
 
-  test('Home, Schedule, Team routes load correctly', async ({ page }) => {
+  test('Home, Schedule, Team routes load correctly @smoke', async ({ page }) => {
     await page.goto('/');
     await stepDelay(page);
     await expect(page.getByTestId('hero-section')).toBeVisible();
@@ -398,5 +398,12 @@ test.describe('8. Routing & 404', () => {
     await stepDelay(page);
     await expect(page.getByTestId('team-page')).toBeVisible();
     await stepDelay(page);
+  });
+});
+
+test.describe('Demo regression failure', () => {
+  test('Intentional failure for regression demo @core-regression', async () => {
+    // Demo: this test is expected to fail in core-regression and full-regression runs.
+    expect(1).toBe(2);
   });
 });

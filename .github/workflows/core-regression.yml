@@ -1,0 +1,66 @@
+# Core regression — includes one intentional failure for demo (at least one test fails).
+name: Core Regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      qase_api_base_url:
+        description: 'Qase API URL'
+        required: true
+      qase_report:
+        description: 'Enabled/disabled reporting to Qase'
+        required: true
+      qase_project_code:
+        description: 'Qase project code'
+        required: true
+      qase_run_id:
+        description: 'Qase Run ID'
+        required: true
+      qase_run_complete:
+        description: 'Qase Run autocomplete'
+        required: true
+
+jobs:
+  core-regression:
+    runs-on: ubuntu-latest
+    env:
+      QASE_API_BASE_URL: ${{ inputs.qase_api_base_url }}
+      QASE_TESTOPS_PROJECT: ${{ inputs.qase_project_code }}
+      QASE_TESTOPS_RUN_ID: ${{ inputs.qase_run_id }}
+      QASE_TESTOPS_RUN_COMPLETE: true
+      QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run core regression tests
+        run: cross-env QASE_MODE=testops npx playwright test --project=core-regression
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-regression-playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-regression-test-results
+          path: test-results/
+          retention-days: 30

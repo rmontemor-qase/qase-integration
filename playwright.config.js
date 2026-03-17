@@ -3,6 +3,11 @@ require('dotenv').config();
 const config = {
   workers: 8,
   fullyParallel: true,
+  projects: [
+    { name: 'smoke', grep: /@smoke/ },
+    { name: 'core-regression', grep: /@smoke|@core-regression/ },
+    { name: 'full-regression', grep: /@smoke|@core-regression|@full-regression/ },
+  ],
   use: {
     baseURL: 'https://test-track-express.lovable.app',
     screenshot: 'on',
