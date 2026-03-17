@@ -4,9 +4,9 @@ const config = {
   workers: 8,
   fullyParallel: true,
   projects: [
-    { name: 'smoke', grep: /@smoke/ },
-    { name: 'core-regression', grep: /@smoke|@core-regression/ },
-    { name: 'full-regression', grep: /@smoke|@core-regression|@full-regression/ },
+    { name: 'smoke', testMatch: /smoke\.spec\.js/ },
+    { name: 'core-regression', testMatch: /core-regression\.spec\.js/ },
+    { name: 'full-regression', testMatch: /full-regression\.spec\.js/ },
   ],
   use: {
     baseURL: 'https://test-track-express.lovable.app',
