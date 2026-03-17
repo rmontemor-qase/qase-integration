@@ -32,7 +32,7 @@ const config = {
         },
         framework: {
           browser: {
-            addAsParameter: true,
+            addAsParameter: false,
             parameterName: 'Browser Name',
           },
           markAsFlaky: true,
