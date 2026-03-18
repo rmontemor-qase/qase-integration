@@ -12,6 +12,8 @@ const config = {
     baseURL: 'https://test-track-express.lovable.app',
     screenshot: 'on',
     video: 'on',
+    /** Richer failure evidence in Qase when uploadAttachments is true */
+    trace: 'retain-on-failure',
   },
   reporter: [
     ['list'],
