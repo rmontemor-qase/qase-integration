@@ -4,15 +4,16 @@ import { demoLog, recordPause } from './helpers.js';
 
 test.describe('Smoke', () => {
   test('Home loads with hero and engineering headline', async ({ page }, testInfo) => {
-    await test.step('Open Velocity Racing home', async () => {
+    await test.step('Open Test Track Express home', async () => {
       demoLog(testInfo, 'Navigating to / for smoke check');
       await page.goto('/');
       await recordPause(page);
     });
     await test.step('Verify hero is visible on recording', async () => {
       await expect(page.getByTestId('hero-section')).toBeVisible();
+      await expect(page.getByTestId('nav-bar')).toContainText('Test Track Express');
       await expect(page.getByTestId('hero-subtitle')).toContainText('Engineering Excellence');
-      demoLog(testInfo, 'Hero section and subtitle OK');
+      demoLog(testInfo, 'Nav brand, hero section and subtitle OK');
       await recordPause(page);
     });
   });
@@ -55,19 +56,24 @@ test.describe('Smoke', () => {
     });
   });
 
-  test('Home application form shows fields and disabled submit', async ({ page }, testInfo) => {
-    await test.step('Scroll to registration form', async () => {
+  test('Home Engineering Dashboard widgets are visible', async ({ page }, testInfo) => {
+    await test.step('Load home', async () => {
       await page.goto('/');
-      await page.getByTestId('form-section').scrollIntoViewIfNeeded();
-      demoLog(testInfo, 'Scrolled to form-section');
       await recordPause(page);
     });
-    await test.step('Visible fields and disabled submit until requirements met', async () => {
-      await expect(page.getByTestId('registration-form')).toBeVisible();
-      await expect(page.getByTestId('driver-input')).toBeVisible();
-      await expect(page.getByTestId('team-select')).toBeVisible();
-      await expect(page.getByTestId('submit-btn')).toBeDisabled();
-      demoLog(testInfo, 'Submit correctly disabled before fill');
+    await test.step('Scroll to Engineering Dashboard', async () => {
+      demoLog(testInfo, 'Scrolling to interactive-section');
+      await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
+      await recordPause(page);
+    });
+    await test.step('Dashboard headline and key controls for recording', async () => {
+      await expect(page.getByTestId('interactive-section')).toContainText(
+        'Engineering Dashboard',
+      );
+      await expect(page.getByTestId('counter-value')).toBeVisible();
+      await expect(page.getByTestId('increment-btn')).toBeVisible();
+      await expect(page.getByTestId('drs-toggle')).toBeVisible();
+      demoLog(testInfo, 'Counter and Active Aero controls visible');
       await recordPause(page);
     });
   });

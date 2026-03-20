@@ -126,31 +126,20 @@ test.describe('Hero and navigation', () => {
   });
 });
 
-test.describe('Home registration form', () => {
-  test('Fill department experience and submit then reset', async ({ page }, testInfo) => {
+test.describe('Home content surface', () => {
+  test('Component registry and default session list on home', async ({ page }, testInfo) => {
     await page.goto('/');
-    await page.getByTestId('form-section').scrollIntoViewIfNeeded();
+    await page.getByTestId('table-section').scrollIntoViewIfNeeded();
     await recordPause(page);
-    demoLog(testInfo, 'Filling driver name');
-    await page.getByTestId('driver-input').fill('Demo Driver');
+    demoLog(testInfo, 'Checking component registry on home');
+    await expect(page.getByTestId('standings-table')).toBeVisible();
+    await expect(page.getByTestId('table-count')).toContainText('5');
+    await expect(page.getByTestId('driver-name-0')).toBeVisible();
+    await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await recordPause(page);
-    await page.getByTestId('team-select').selectOption({ index: 1 });
-    await recordPause(page);
-    await page.getByTestId('lap-slider').fill('10');
-    await expect(page.getByTestId('lap-count')).toContainText('10');
-    demoLog(testInfo, 'Slider at 10 years');
-    await recordPause(page);
-    await page.getByTestId('agree-checkbox').check();
-    await expect(page.getByTestId('submit-btn')).toBeEnabled();
-    await page.getByTestId('submit-btn').click();
-    await recordPause(page);
-    await expect(page.getByTestId('success-message')).toBeVisible();
-    await expect(page.getByTestId('submitted-driver')).toBeVisible();
-    demoLog(testInfo, 'Success state visible');
-    await recordPause(page);
-    await page.getByTestId('reset-btn').click();
-    await recordPause(page);
-    await expect(page.getByTestId('registration-form')).toBeVisible();
+    await expect(page.getByTestId('list-item-0')).toContainText(/Wind Tunnel/i);
+    await expect(page.getByTestId('item-count')).toContainText('3');
+    demoLog(testInfo, 'Default test sessions list visible');
     await recordPause(page);
   });
 });
@@ -326,7 +315,7 @@ test.describe('Expo registration form', () => {
     await page.getByTestId('last-name-input').fill('Rivera');
     await page.getByTestId('email-input').fill('alex@motorsport.com');
     await page.getByTestId('phone-input').fill('+1 555 123 4567');
-    await page.getByTestId('address-input').fill('Velocity Racing');
+    await page.getByTestId('address-input').fill('Test Track Express');
     await page.getByTestId('city-input').fill('Stuttgart');
     await page.getByTestId('state-input').fill('Germany');
     await page.getByTestId('zip-input').fill('ENG-0042');
@@ -360,12 +349,12 @@ test.describe('Routing', () => {
 });
 
 test.describe('Footer and demo defect', () => {
-  test('Footer shows Velocity Racing Engineering', async ({ page }, testInfo) => {
+  test('Footer shows copyright notice', async ({ page }, testInfo) => {
     await page.goto('/');
     await page.getByTestId('footer').scrollIntoViewIfNeeded();
     await recordPause(page);
-    await expect(page.getByTestId('footer')).toContainText('Velocity Racing Engineering');
-    demoLog(testInfo, 'Footer branding OK');
+    await expect(page.getByTestId('footer')).toContainText(/©|All rights reserved/i);
+    demoLog(testInfo, 'Footer copyright line OK');
     await recordPause(page);
   });
 

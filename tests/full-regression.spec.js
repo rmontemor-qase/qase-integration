@@ -177,46 +177,45 @@ test.describe('Hero section', () => {
   });
 });
 
-/* ——— Home application form ——— */
-test.describe('Home page registration form', () => {
-  test('Form controls visible in form section', async ({ page }, testInfo) => {
+/* ——— Home surface (inline registration form removed; use /form — Expo) ——— */
+test.describe('Home engineering surface', () => {
+  test('Engineering Dashboard heading and counter card', async ({ page }, testInfo) => {
     await page.goto('/');
-    await page.getByTestId('form-section').scrollIntoViewIfNeeded();
+    await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await recordPause(page);
-    await expect(page.getByTestId('lap-slider')).toBeVisible();
-    await expect(page.getByTestId('agree-checkbox')).toBeVisible();
-    demoLog(testInfo, 'Form section scrolled into view');
+    await expect(page.getByTestId('interactive-section')).toContainText(
+      'Engineering Dashboard',
+    );
+    await expect(page.getByTestId('counter-card')).toBeVisible();
+    await expect(page.getByTestId('counter-value')).toHaveText('0');
+    demoLog(testInfo, 'Dashboard headline and counter at zero');
     await recordPause(page);
   });
 
-  test('Submit disabled until name department and agreement', async ({ page }, testInfo) => {
+  test('Component registry block shows five rows', async ({ page }, testInfo) => {
     await page.goto('/');
-    await page.getByTestId('form-section').scrollIntoViewIfNeeded();
-    await expect(page.getByTestId('submit-btn')).toBeDisabled();
-    await page.getByTestId('driver-input').fill('Name');
-    await page.getByTestId('team-select').selectOption({ index: 2 });
-    await page.getByTestId('agree-checkbox').check();
+    await page.getByTestId('table-section').scrollIntoViewIfNeeded();
     await recordPause(page);
-    await expect(page.getByTestId('submit-btn')).toBeEnabled();
+    await expect(page.getByTestId('standings-table')).toBeVisible();
+    for (let i = 0; i <= 4; i++) {
+      await expect(page.getByTestId(`table-row-${i}`)).toBeVisible();
+    }
+    await expect(page.getByTestId('table-count')).toContainText('5');
+    demoLog(testInfo, 'Registry table five components');
     await recordPause(page);
   });
 
-  test('Submit shows Name Department Experience', async ({ page }, testInfo) => {
+  test('Test schedule list default sessions on home', async ({ page }, testInfo) => {
     await page.goto('/');
-    await page.getByTestId('form-section').scrollIntoViewIfNeeded();
-    await page.getByTestId('driver-input').fill('Jordan');
-    await page.getByTestId('team-select').selectOption({ label: /Powertrain/i });
-    await page.getByTestId('lap-slider').fill('5');
-    await expect(page.getByTestId('lap-count')).toContainText('5');
-    await page.getByTestId('agree-checkbox').check();
-    await page.getByTestId('submit-btn').click();
+    await page.getByTestId('interactive-section').scrollIntoViewIfNeeded();
     await recordPause(page);
-    await expect(page.getByTestId('submitted-team')).toContainText(/Powertrain/i);
-    await expect(page.getByTestId('submitted-laps')).toContainText('5');
-    demoLog(testInfo, 'Inline form success');
+    await expect(page.getByTestId('list-card')).toBeVisible();
+    await expect(page.getByTestId('list-item-0')).toContainText(/Wind Tunnel/i);
+    await expect(page.getByTestId('list-item-2')).toContainText(/Dyno/i);
+    await expect(page.getByTestId('item-count')).toContainText('3');
+    demoLog(testInfo, 'Three default sessions');
     await recordPause(page);
   });
-
 });
 
 /* ——— Dashboard counter ——— */
@@ -551,11 +550,11 @@ test.describe('Engineering Team page', () => {
 
 /* ——— Footer routing E2E ——— */
 test.describe('Footer and routing', () => {
-  test('Footer branding', async ({ page }, testInfo) => {
+  test('Footer copyright line', async ({ page }, testInfo) => {
     await page.goto('/');
     await page.getByTestId('footer').scrollIntoViewIfNeeded();
     await recordPause(page);
-    await expect(page.getByTestId('footer')).toContainText('Velocity Racing Engineering');
+    await expect(page.getByTestId('footer')).toContainText(/©|All rights reserved/i);
     await recordPause(page);
   });
 

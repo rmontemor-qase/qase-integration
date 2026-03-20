@@ -41,7 +41,7 @@ npx playwright test --project=full-regression
 | **Attachments** | `uploadAttachments: true` — failure media uploaded to the run |
 | **Public report link** | `showPublicReportLink: true` — link printed at end of run |
 
-Console lines prefixed with **`[Velocity QA]`** appear in CI logs and help correlate steps with the recording.
+Console lines prefixed with **`[Test Track QA]`** appear in CI logs and help correlate steps with the recording.
 
 ## Demo-oriented tests
 

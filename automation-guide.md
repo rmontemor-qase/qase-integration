@@ -1,6 +1,6 @@
-# Velocity Racing Engineering
+# Test Track Express
 
-A React + TypeScript web application showcasing a race car engineering team's development workflow, component registry, and engineering personnel. Built with Vite, Tailwind CSS, shadcn/ui, and Framer Motion.
+A React + TypeScript web application (hosted demo: **Test Track Express**) showcasing a race car engineering team's development workflow, component registry, and engineering personnel. Built with Vite, Tailwind CSS, shadcn/ui, and Framer Motion.
 
 ## Tech Stack
 
@@ -17,7 +17,7 @@ A React + TypeScript web application showcasing a race car engineering team's de
 
 | Route | Page | Component | Description |
 |-------|------|-----------|-------------|
-| `/` | Home | `Index` | Hero section with nav bar, application form, engineering dashboard, component registry, footer |
+| `/` | Home | `Index` | Hero section with nav bar, engineering dashboard, component registry, footer (registration: `/form`) |
 | `/login` | Login | `Login` | Sign-in form with dummy credentials |
 | `/form` | Expo Registration | `AutomationForm` | Motorsport Engineering Expo registration form (8 text fields) |
 | `/schedule` | Development Timeline | `Schedule` | 8 engineering milestones with phase numbers, facilities, dates, and completion status |
@@ -131,7 +131,7 @@ All interactive elements use `data-testid` attributes for reliable selector targ
 |----------|---------|-------------|
 | `hero-section` | Section wrapper | Main hero area |
 | `hero-subtitle` | Subtitle text | Text: "Engineering Excellence" |
-| `nav-bar` | Navigation bar | Top nav with links and auth controls |
+| `nav-bar` | Navigation bar | Top nav with links and auth controls; brand text **Test Track Express** |
 | `nav-form-link` | Expo link | Link to `/form`, text: "Expo" |
 | `nav-login-btn` | Sign In button | Link to `/login`, visible when logged out |
 | `logged-in-user` | User display | Text: "Signed in as {username}", visible when logged in |
@@ -144,52 +144,34 @@ All interactive elements use `data-testid` attributes for reliable selector targ
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 1.1 | Hero renders | Navigate to `/`. | `hero-section` and `hero-subtitle` ("Engineering Excellence") are visible. |
+| 1.1 | Hero renders | Navigate to `/`. | `hero-section`, `nav-bar` contains "Test Track Express", and `hero-subtitle` ("Engineering Excellence") are visible. |
 | 1.2 | CTA navigation | Click `start-engine-btn`. | Navigates to `/schedule`. Go back. Click `pit-stop-btn` → navigates to `/team`. |
 | 1.3 | Hero image loads | Check hero image element. | Image is visible with valid `src` attribute. |
 | 1.4 | Nav links | Check `nav-bar` links. | Contains links to Timeline, Team, and Expo. Click `nav-form-link` → navigates to `/form`. |
 
 ---
 
-### 2. Application Form Section (Home Page)
+### 2. Home Page Layout (no inline application form)
 
-**URL:** `/` (scroll to form section)  
-**Section container:** `data-testid="form-section"`
+The **inline application / registration form was removed** from `/`. Multi-field registration lives only on **`/form`** (Motorsport Engineering Expo — see §0.6).
 
-#### Elements
-
-| Selector | Element | Type | Description |
-|----------|---------|------|-------------|
-| `registration-form` | Form | `form` | Application form container |
-| `driver-input` | Name field | `input[type="text"]` | Placeholder: "e.g. Alex Rivera" |
-| `team-select` | Department dropdown | `select` | Options: "", "Aerodynamics", "Powertrain", "Chassis & Suspension", "Data & Simulation", "Materials & Composites" |
-| `lap-slider` | Experience slider | `input[type="range"]` | Range: 1–20, default: 3 |
-| `lap-count` | Slider display | `span` | Text: "{value} years" |
-| `agree-checkbox` | Agreement checkbox | `input[type="checkbox"]` | Must be checked to enable submit |
-| `submit-btn` | Submit button | `button[type="submit"]` | Disabled until name + department + checkbox filled |
-| `success-message` | Success view | `div` | Shown after submission |
-| `submitted-driver` | Submitted name | `p` | Text: "Name: {value}" |
-| `submitted-team` | Submitted dept | `p` | Text: "Department: {value}" |
-| `submitted-laps` | Submitted exp | `p` | Text: "Experience: {value} years" |
-| `reset-btn` | Reset button | `button` | Text: "Submit Another" |
+On `/`, after the hero, the home page continues with the **Engineering Dashboard** (§3) and **Component Registry** (§4).
 
 #### Scenarios
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 2.1 | Form renders | Navigate to `/`. Scroll to form section. | `registration-form`, `driver-input`, `team-select`, `lap-slider`, `agree-checkbox`, `submit-btn` are all visible. |
-| 2.2 | Submit disabled by default | Without filling fields. | `submit-btn` has `disabled` attribute. |
-| 2.3 | Submit enables | Fill `driver-input`, select department in `team-select`, check `agree-checkbox`. | `submit-btn` is no longer disabled. |
-| 2.4 | Successful submission | Fill all required fields, click `submit-btn`. | `success-message` appears with `submitted-driver`, `submitted-team`, `submitted-laps`. |
-| 2.5 | Slider updates display | Move `lap-slider` to value 10. | `lap-count` text updates to "10 years". |
-| 2.6 | Reset after submission | Submit form, then click `reset-btn`. | `registration-form` reappears with all fields empty/default. |
+| 2.1 | Engineering Dashboard visible | Navigate to `/`. Scroll to `interactive-section`. | Visible heading **"Engineering Dashboard"**, `counter-card`, `toggle-card`, `list-card` present. |
+| 2.2 | Component registry visible | Scroll to `table-section`. | `standings-table`, `table-row-0`–`table-row-4`, `table-count` shows **"5 components"**. |
+| 2.3 | Default test sessions | On `interactive-section`, check list card. | `list-item-0`–`2` default labels, `item-count` shows **"3 sessions"**. |
 
 ---
 
 ### 3. Engineering Dashboard (Interactive Section)
 
 **URL:** `/` (scroll to interactive section)  
-**Section container:** `data-testid="interactive-section"`
+**Section container:** `data-testid="interactive-section"`  
+**Section heading (visible):** "Engineering Dashboard"
 
 ---
 
@@ -435,7 +417,7 @@ All interactive elements use `data-testid` attributes for reliable selector targ
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 7.1 | Footer renders | Scroll to bottom of `/`. | `footer` is visible. Contains "Velocity Racing Engineering". |
+| 7.1 | Footer renders | Scroll to bottom of `/`. | `footer` is visible. Contains copyright line: **"© All rights reserved."** |
 
 ---
 
@@ -463,7 +445,7 @@ All `data-testid` values across the app, grouped by page:
 `automation-form-page`, `automation-form`, `back-home-btn`, `first-name-input`, `last-name-input`, `email-input`, `phone-input`, `address-input`, `city-input`, `state-input`, `zip-input`, `submit-form-btn`, `clear-form-btn`, `form-success`, `submitted-firstName`, `submitted-lastName`, `submitted-email`, `submitted-phone`, `submitted-address`, `submitted-city`, `submitted-state`, `submitted-zipCode`, `reset-form-btn`
 
 ### `/` (Home)
-`hero-section`, `hero-subtitle`, `nav-bar`, `nav-form-link`, `nav-login-btn`, `logged-in-user`, `logout-btn`, `start-engine-btn`, `pit-stop-btn`, `form-section`, `registration-form`, `driver-input`, `team-select`, `lap-slider`, `lap-count`, `agree-checkbox`, `submit-btn`, `success-message`, `submitted-driver`, `submitted-team`, `submitted-laps`, `reset-btn`, `interactive-section`, `counter-card`, `counter-value`, `increment-btn`, `decrement-btn`, `reset-counter-btn`, `toggle-card`, `drs-toggle`, `drs-status`, `toast-btn`, `toast-notification`, `list-card`, `add-item-input`, `add-item-btn`, `list-item-{n}`, `remove-item-{n}`, `item-count`, `hover-card`, `telemetry-1`, `telemetry-2`, `telemetry-3`, `hover-info`, `open-modal-btn`, `modal-overlay`, `modal-content`, `close-modal-btn`, `table-section`, `standings-table`, `table-filter`, `table-count`, `sort-pos`, `sort-points`, `table-row-{n}`, `driver-name-{n}`, `status-{n}`, `footer`
+`hero-section`, `hero-subtitle`, `nav-bar`, `nav-form-link`, `nav-login-btn`, `logged-in-user`, `logout-btn`, `start-engine-btn`, `pit-stop-btn`, `interactive-section`, `counter-card`, `counter-value`, `increment-btn`, `decrement-btn`, `reset-counter-btn`, `toggle-card`, `drs-toggle`, `drs-status`, `toast-btn`, `toast-notification`, `list-card`, `add-item-input`, `add-item-btn`, `list-item-{n}`, `remove-item-{n}`, `item-count`, `hover-card`, `telemetry-1`, `telemetry-2`, `telemetry-3`, `hover-info`, `open-modal-btn`, `modal-overlay`, `modal-content`, `close-modal-btn`, `table-section`, `standings-table`, `table-filter`, `table-count`, `sort-pos`, `sort-points`, `table-row-{n}`, `driver-name-{n}`, `status-{n}`, `footer`
 
 ### `/schedule`
 `schedule-page`, `schedule-nav`, `schedule-title`, `back-home-link`, `nav-team-link`, `race-{n}`, `race-round-{n}`, `race-name-{n}`, `race-date-{n}`, `race-status-{n}`

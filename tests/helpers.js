@@ -20,7 +20,7 @@ export async function recordPause(page, ms = RECORD_PAUSE_MS) {
  * @param {string} message
  */
 export function demoLog(_testInfo, message) {
-  console.log(`[Velocity QA] ${message}`);
+  console.log(`[Test Track QA] ${message}`);
 }
 
 /**
@@ -45,7 +45,7 @@ export function assertDemo(condition, message) {
  * @param {Error} err
  */
 export async function logAssertionError(testInfo, context, err) {
-  const msg = `[Velocity QA] CHECK FAILED: ${context} — ${err?.message || err}`;
+  const msg = `[Test Track QA] CHECK FAILED: ${context} — ${err?.message || err}`;
   console.error(msg);
   try {
     await testInfo.attach('failure-context.txt', {
