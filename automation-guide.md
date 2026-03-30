@@ -1,13 +1,14 @@
-# Test Track Express
+# GameDay Gear
 
-A React + TypeScript web application (hosted demo: **Test Track Express**) showcasing a race car engineering team's development workflow, component registry, and engineering personnel. Built with Vite, Tailwind CSS, shadcn/ui, and Framer Motion.
+A sports equipment e-commerce demo application built for showcasing test automation interactions. Built with React, TypeScript, Vite, Tailwind CSS, and shadcn/ui.
+
+This is a **Qase demonstration application**. All content is simulated — no real transactions are processed.
 
 ## Tech Stack
 
 - **React 18** + **TypeScript**
 - **Vite** (build tool)
 - **Tailwind CSS** (styling via semantic design tokens)
-- **Framer Motion** (animations)
 - **React Router v6** (routing)
 - **shadcn/ui** (component library)
 
@@ -17,11 +18,13 @@ A React + TypeScript web application (hosted demo: **Test Track Express**) showc
 
 | Route | Page | Component | Description |
 |-------|------|-----------|-------------|
-| `/` | Home | `Index` | Hero section with nav bar, engineering dashboard, component registry, footer (registration: `/form`) |
+| `/` | Shop | `Index` | Product catalog with search, category filters, sorting |
 | `/login` | Login | `Login` | Sign-in form with dummy credentials |
-| `/form` | Expo Registration | `AutomationForm` | Motorsport Engineering Expo registration form (8 text fields) |
-| `/schedule` | Development Timeline | `Schedule` | 8 engineering milestones with phase numbers, facilities, dates, and completion status |
-| `/team` | Engineering Team | `Team` | 6 team member cards with names, roles, driver numbers, and bios |
+| `/product/:id` | Product Detail | `ProductDetail` | Full product page with size/color selectors, quantity, add-to-cart |
+| `/cart` | Shopping Cart | `Cart` | Cart items with quantity controls, summary, checkout link |
+| `/checkout` | Checkout | `Checkout` | Shipping + payment form with order confirmation |
+| `/account` | Account | `Account` | User profile with wishlist (requires login) |
+| `/wishlist` | Wishlist | `Wishlist` | Saved products with add-to-cart and remove |
 | `*` | Not Found | `NotFound` | 404 page |
 
 ---
@@ -40,15 +43,34 @@ The app uses an **optional** client-side login flow with hardcoded dummy credent
 
 ---
 
+## Product Data (8 items)
+
+All products are fictional demo items. Prices use "credits" (a fictional currency) to avoid confusion with real transactions.
+
+| ID | Name | Price | Category | In Stock |
+|----|------|-------|----------|----------|
+| prod-001 | Soccer Ball | 25 credits | Balls | ✓ |
+| prod-002 | Basketball | 35 credits | Balls | ✓ |
+| prod-003 | Volleyball | 30 credits | Balls | ✓ |
+| prod-004 | Running Sneakers | 120 credits | Footwear | ✓ |
+| prod-005 | Sports Jersey | 55 credits | Apparel | ✓ |
+| prod-006 | Tennis Ball Set | 15 credits | Balls | ✗ |
+| prod-007 | Gym Duffel Bag | 65 credits | Accessories | ✓ |
+| prod-008 | Athletic Shorts | 40 credits | Apparel | ✓ |
+
+Categories: All, Balls, Apparel, Footwear, Accessories
+
+---
+
 ## Test Automation Guide
 
-All interactive elements use `data-testid` attributes for reliable selector targeting. Below is an exhaustive reference of every testable scenario, organized by page and section.
+All interactive elements use `data-testid` attributes for reliable selector targeting. Below is an exhaustive reference of every testable scenario, organized by page.
 
 ---
 
 ### 0. Login Flow
 
-**URL:** `/login`  
+**URL:** `/login`
 **Page container:** `data-testid="login-page"`
 
 #### Elements
@@ -69,355 +91,293 @@ All interactive elements use `data-testid` attributes for reliable selector targ
 |---|----------|-------|-----------------|
 | 0.1 | Successful login | Navigate to `/login`. Fill `username-input` with `admin`, `password-input` with `password123`. Click `login-btn`. | Redirects to `/`. `logged-in-user` displays "admin". |
 | 0.2 | Failed login | Navigate to `/login`. Fill `username-input` with `wrong`, `password-input` with `wrong`. Click `login-btn`. | `login-error` appears with error text. |
-| 0.3 | Skip login | Navigate to `/login`. Click `skip-login-btn`. | Redirects to `/`. |
-| 0.4 | Logout | Login successfully, then on `/` click `logout-btn`. | `nav-login-btn` appears. `logged-in-user` and `logout-btn` disappear. |
+| 0.3 | Skip login | Navigate to `/login`. Click `skip-login-btn` ("Skip login →"). | Redirects to `/`. |
+| 0.4 | Logout | Login successfully, then click `logout-btn` in navbar. | `nav-login-btn` appears. `logged-in-user` and `logout-btn` disappear. |
 | 0.5 | Nav bar auth state | Visit `/` without login. | `nav-login-btn` is visible. After login: `logged-in-user` and `logout-btn` are visible instead. |
 
 ---
 
-### 0.6 Motorsport Engineering Expo Registration
+### 1. Shop Page (Product Catalog)
 
-**URL:** `/form`  
-**Page container:** `data-testid="automation-form-page"`
+**URL:** `/`
+**Page container:** `data-testid="shop-page"`
+
+#### Elements
+
+| Selector | Element | Description |
+|----------|---------|-------------|
+| `shop-page` | Page wrapper | Main shop page |
+| `hero-section` | Hero banner | Contains title "GameDay Gear" |
+| `hero-subtitle` | Subtitle | Text: "Sports equipment, apparel, and accessories" |
+| `nav-bar` | Navigation bar | Sticky nav with logo, wishlist, cart, auth controls |
+| `nav-logo` | Logo link | Text: "GameDay Gear", links to `/` |
+| `nav-login-btn` | Sign In link | Visible when logged out |
+| `nav-cart-link` | Cart icon link | Links to `/cart` |
+| `nav-wishlist-link` | Wishlist icon link | Links to `/wishlist` |
+| `nav-account-link` | Account link | Visible when logged in, links to `/account` |
+| `logged-in-user` | Username display | Shows current username |
+| `logout-btn` | Sign Out button | Visible when logged in |
+| `cart-count` | Cart badge | Shows number of items in cart |
+| `wishlist-count` | Wishlist badge | Shows number of wishlisted items |
+| `search-input` | Search field | Placeholder: "Search products..." |
+| `sort-select` | Sort dropdown | Options (label / value): Name: A-Z (`name-asc`), Name: Z-A (`name-desc`), Price: Low to High (`price-asc`), Price: High to Low (`price-desc`), Top Rated (`rating-desc`) |
+| `category-filters` | Category filter container | Contains category buttons |
+| `category-all` | All category button | Filters to show all products |
+| `category-balls` | Balls category button | Filters to Balls |
+| `category-apparel` | Apparel category button | Filters to Apparel |
+| `category-footwear` | Footwear category button | Filters to Footwear |
+| `category-accessories` | Accessories category button | Filters to Accessories |
+| `product-count` | Result count | Text: "{n} products" |
+| `product-grid` | Product grid container | Contains product cards |
+| `product-card-{n}` | Product card | Zero-indexed |
+| `product-name-{n}` | Product name | Zero-indexed |
+| `product-price-{n}` | Product price | Zero-indexed, e.g. "25.00 credits" |
+| `product-category-{n}` | Product category | Zero-indexed |
+| `product-rating-{n}` | Product rating | Zero-indexed |
+| `product-image-{n}` | Product image | Zero-indexed |
+| `product-link-{n}` | Product detail link | Zero-indexed, links to `/product/{id}` |
+| `add-to-cart-btn-{n}` | Add to Cart button | Zero-indexed, only on in-stock products |
+| `out-of-stock-{n}` | Out of Stock label | Zero-indexed, only on out-of-stock products |
+| `wishlist-btn-{n}` | Wishlist toggle | Zero-indexed, heart icon |
+| `no-results` | No results message | Shown when search/filter yields 0 products |
+| `footer` | Footer | Contains Qase demo disclaimer |
+
+#### Scenarios
+
+| # | Scenario | Steps | Expected Result |
+|---|----------|-------|-----------------|
+| 1.1 | Page renders | Navigate to `/`. | `shop-page` is visible. `product-count` shows "8 products". |
+| 1.2 | Search by name | Type "basketball" in `search-input`. | 1 result shown. `product-count` shows "1 product". `product-name-0` is "Basketball". |
+| 1.3 | Search no results | Type "xyz123" in `search-input`. | `no-results` is visible. `product-count` shows "0 products". |
+| 1.4 | Clear search | Clear `search-input`. | All 8 products restored. |
+| 1.5 | Filter by category | Click `category-balls`. | Only Balls products shown. `product-count` shows "4 products". |
+| 1.6 | Filter All | Click `category-all`. | All 8 products shown. |
+| 1.7 | Sort by price low | Select "Price: Low to High" from `sort-select`. | `product-name-0` is "Tennis Ball Set" (15 credits). |
+| 1.8 | Sort by price high | Select "Price: High to Low" from `sort-select`. | `product-name-0` is "Running Sneakers" (120 credits). |
+| 1.9 | Add to cart from catalog | Click `add-to-cart-btn-0`. | `cart-count` appears/increments in navbar. |
+| 1.10 | Out of stock item | Check Tennis Ball Set card. | `out-of-stock-{n}` is visible. No "Add" button for that card. |
+| 1.11 | Toggle wishlist | Click `wishlist-btn-0`. | Heart fills red. `wishlist-count` appears in navbar. Click again → heart unfills. |
+| 1.12 | Navigate to product | Click `product-link-0`. | Navigates to `/product/{id}`. |
+
+---
+
+### 2. Product Detail Page
+
+**URL:** `/product/:id`
+**Page container:** `data-testid="product-detail-page"`
+
+#### Elements
+
+| Selector | Element | Description |
+|----------|---------|-------------|
+| `product-detail-page` | Page wrapper | |
+| `back-to-shop` | Back link | Text: "Back to Shop", links to `/` |
+| `detail-product-image` | Product image | Full-size product image |
+| `detail-product-name` | Product name | e.g. "Running Sneakers" |
+| `detail-category` | Category label | e.g. "FOOTWEAR" |
+| `detail-price` | Price | e.g. "120.00 credits" |
+| `detail-description` | Description | Product description text |
+| `detail-rating` | Rating | Star rating with review count |
+| `size-selector` | Size options container | Only present if product has sizes |
+| `size-option-{size}` | Size button | e.g. `size-option-M`, `size-option-L` |
+| `color-selector` | Color options container | Only present if product has colors |
+| `color-option-{color}` | Color button | e.g. `color-option-Black`, `color-option-Red` |
+| `quantity-selector` | Quantity controls | |
+| `decrease-quantity` | Decrease button | Min 1 |
+| `quantity-value` | Quantity display | Default: "1" |
+| `increase-quantity` | Increase button | |
+| `detail-add-to-cart` | Add to Cart button | Only for in-stock products |
+| `detail-out-of-stock` | Out of Stock label | Only for out-of-stock products |
+| `detail-wishlist-btn` | Wishlist toggle | Heart icon |
+| `added-to-cart-message` | Confirmation text | "Item added to your cart!" — shown briefly after adding |
+
+#### Scenarios
+
+| # | Scenario | Steps | Expected Result |
+|---|----------|-------|-----------------|
+| 2.1 | Page renders | Navigate to `/product/prod-004`. | `detail-product-name` is "Running Sneakers". `detail-price` is "120.00 credits". |
+| 2.2 | Select size | Click `size-option-L`. | L button gets active styling. |
+| 2.3 | Select color | Click `color-option-Black`. | Black button gets active styling. |
+| 2.4 | Increase quantity | Click `increase-quantity` twice. | `quantity-value` is "3". |
+| 2.5 | Decrease quantity | Click `decrease-quantity`. | `quantity-value` is "2". Min is 1. |
+| 2.6 | Add to cart | Click `detail-add-to-cart`. | `added-to-cart-message` appears. `cart-count` increments. |
+| 2.7 | Wishlist toggle | Click `detail-wishlist-btn`. | Heart fills. Click again → unfills. |
+| 2.8 | Out of stock product | Navigate to `/product/prod-006`. | `detail-out-of-stock` is visible. No add-to-cart button. |
+| 2.9 | Back navigation | Click `back-to-shop`. | Returns to `/`. |
+
+---
+
+### 3. Shopping Cart
+
+**URL:** `/cart`
+**Page container:** `data-testid="cart-page"`
+
+#### Elements
+
+| Selector | Element | Description |
+|----------|---------|-------------|
+| `cart-page` | Page wrapper | |
+| `back-to-shop` | Back link | Text: "Continue Shopping" |
+| `cart-total-items` | Item count | Text: "{n} items" |
+| `empty-cart` | Empty state | Shown when cart is empty |
+| `cart-item-{n}` | Cart item row | Zero-indexed |
+| `cart-item-name-{n}` | Item name | Zero-indexed |
+| `cart-item-price-{n}` | Item unit price in credits | Zero-indexed |
+| `cart-item-quantity-{n}` | Item quantity | Zero-indexed |
+| `cart-increase-{n}` | Increase quantity button | Zero-indexed |
+| `cart-decrease-{n}` | Decrease quantity button | Zero-indexed |
+| `remove-cart-item-{n}` | Remove item button | Zero-indexed |
+| `cart-summary` | Summary container | |
+| `cart-subtotal` | Subtotal | e.g. "150.00 credits" |
+| `cart-shipping` | Shipping cost | "Free" if subtotal >= 100 credits, else "10 credits" |
+| `cart-total` | Total | Subtotal + shipping in credits |
+| `checkout-btn` | Checkout link | Links to `/checkout` |
+| `clear-cart-btn` | Clear cart button | Removes all items |
+
+#### Scenarios
+
+| # | Scenario | Steps | Expected Result |
+|---|----------|-------|-----------------|
+| 3.1 | Empty cart | Navigate to `/cart` with no items. | `empty-cart` is visible. |
+| 3.2 | Cart with items | Add items from shop, navigate to `/cart`. | `cart-item-0` is visible. Quantities and prices shown. |
+| 3.3 | Increase quantity | Click `cart-increase-0`. | `cart-item-quantity-0` increments. Total updates. |
+| 3.4 | Decrease quantity | Click `cart-decrease-0` to quantity 1, then again. | Item is removed. |
+| 3.5 | Remove item | Click `remove-cart-item-0`. | Item disappears. `cart-total-items` decrements. |
+| 3.6 | Free shipping | Add items totaling >= 100 credits. | `cart-shipping` shows "Free". |
+| 3.7 | Paid shipping | Cart subtotal < 100 credits. | `cart-shipping` shows "10 credits". |
+| 3.8 | Clear cart | Click `clear-cart-btn`. | `empty-cart` appears. |
+| 3.9 | Go to checkout | Click `checkout-btn`. | Navigates to `/checkout`. |
+
+---
+
+### 4. Checkout
+
+**URL:** `/checkout`
+**Page container:** `data-testid="checkout-page"`
 
 #### Elements
 
 | Selector | Element | Type | Label | Placeholder |
 |----------|---------|------|-------|-------------|
-| `automation-form-page` | Page wrapper | `div` | — | — |
-| `automation-form` | Form | `form` | — | — |
-| `back-home-btn` | Back button | `button` | — | Text: "← Back to Home" |
-| `first-name-input` | First Name | `input[type="text"]` | First Name | "Alex" |
-| `last-name-input` | Last Name | `input[type="text"]` | Last Name | "Rivera" |
-| `email-input` | Work Email | `input[type="email"]` | Work Email | "alex.rivera@motorsport.com" |
-| `phone-input` | Phone | `input[type="tel"]` | Phone | "+1 (555) 123-4567" |
-| `address-input` | Company / Organization | `input[type="text"]` | Company / Organization | "Velocity Racing Engineering" |
-| `city-input` | City | `input[type="text"]` | City | "Stuttgart" |
-| `state-input` | Country | `input[type="text"]` | Country | "Germany" |
-| `zip-input` | Badge ID / Employee # | `input[type="text"]` | Badge ID / Employee # | "ENG-0042" |
-| `submit-form-btn` | Submit | `button[type="submit"]` | — | Text: "Register" |
-| `clear-form-btn` | Clear | `button[type="button"]` | — | Text: "Clear" |
-| `form-success` | Success container | `div` | — | Shown after submission |
-| `submitted-firstName` | Submitted first name | `p` | — | Shows entered first name |
-| `submitted-lastName` | Submitted last name | `p` | — | Shows entered last name |
-| `submitted-email` | Submitted email | `p` | — | Shows entered email |
-| `submitted-phone` | Submitted phone | `p` | — | Shows entered phone |
-| `submitted-address` | Submitted address | `p` | — | Shows entered company |
-| `submitted-city` | Submitted city | `p` | — | Shows entered city |
-| `submitted-state` | Submitted country | `p` | — | Shows entered country |
-| `submitted-zipCode` | Submitted badge ID | `p` | — | Shows entered badge ID |
-| `reset-form-btn` | Reset button | `button` | — | Text: "Register Another Attendee" |
+| `checkout-page` | Page wrapper | `div` | — | — |
+| `back-to-cart` | Back link | `a` | — | Text: "Back to Cart" |
+| `checkout-form` | Form | `form` | — | — |
+| `checkout-first-name` | First Name | `input[type="text"]` | First Name | "John" |
+| `checkout-last-name` | Last Name | `input[type="text"]` | Last Name | "Smith" |
+| `checkout-email` | Email | `input[type="email"]` | Email | "john@email.com" |
+| `checkout-phone` | Phone | `input[type="tel"]` | Phone | "555-0123" |
+| `checkout-address` | Address | `input[type="text"]` | Address | "123 Main St" |
+| `checkout-city` | City | `input[type="text"]` | City | "New York" |
+| `checkout-country` | Country | `input[type="text"]` | Country | "USA" |
+| `checkout-zip` | ZIP Code | `input[type="text"]` | ZIP Code | "10001" |
+| `checkout-card-number` | Card Number | `input[type="text"]` | Card Number | "0000 0000 0000 0000" |
+| `checkout-expiry` | Expiry Date | `input[type="text"]` | Expiry Date | "MM/YY" |
+| `checkout-cvv` | CVV | `input[type="text"]` | CVV | "123" |
+| `place-order-btn` | Submit | `button[type="submit"]` | — | Text: "Place Order — {total} credits" |
+| `checkout-summary` | Order summary sidebar | `div` | — | — |
+| `checkout-item-{n}` | Summary item | `div` | — | Zero-indexed |
+| `checkout-subtotal` | Subtotal | `span` | — | — |
+| `checkout-shipping` | Shipping | `span` | — | — |
+| `checkout-total` | Total | `span` | — | — |
+
+#### Order Confirmation Elements
+
+| Selector | Element | Description |
+|----------|---------|-------------|
+| `order-confirmation` | Confirmation container | Shown after successful submission |
+| `order-number` | Order number | Random order ID, e.g. "ORD-A1B2C3" |
+| `confirmed-name` | Confirmed name | Shows submitted first + last name |
+| `confirmed-email` | Confirmed email | Shows submitted email |
+| `confirmed-address` | Confirmed address | Shows full address |
+| `continue-shopping-btn` | Continue button | Navigates to `/` |
+| `order-details` | Order details card | Contains confirmation info |
 
 #### Scenarios
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 0.6.1 | Fill and submit | Navigate to `/form`. Fill all 8 fields with valid data. Click `submit-form-btn`. | `form-success` appears. `submitted-firstName` shows the entered first name. All submitted values are displayed. |
-| 0.6.2 | Clear form | Fill some fields. Click `clear-form-btn`. | All 8 input fields are cleared to empty strings. |
-| 0.6.3 | Submit another | After successful submission, click `reset-form-btn`. | Form reappears (`automation-form` visible) with all fields empty. |
-| 0.6.4 | Back navigation | Click `back-home-btn`. | Redirects to `/`. |
-| 0.6.5 | All fields required | Leave any field empty, click `submit-form-btn`. | Browser native validation prevents submission (all fields have `required`). |
+| 4.1 | Empty cart redirect | Navigate to `/checkout` with empty cart. | Copy: "Your cart is empty. Add items before checking out." Link to shop (e.g. "Go Shopping"). |
+| 4.2 | Fill and submit | Add items to cart. Navigate to `/checkout`. Fill all fields. Click `place-order-btn`. | `order-confirmation` appears. `order-number` shows ID. `confirmed-name` shows entered name. |
+| 4.3 | Required validation | Leave fields empty, click `place-order-btn`. | Browser native validation prevents submission. |
+| 4.4 | Order summary | Check `checkout-summary`. | Lists cart items with quantities and prices. Shows subtotal, shipping, total. |
+| 4.5 | Back to cart | Click `back-to-cart`. | Navigates to `/cart`. |
+| 4.6 | Continue shopping | After order confirmation, click `continue-shopping-btn`. | Navigates to `/`. Cart is cleared. |
 
 ---
 
-### 1. Hero Section
+### 5. Wishlist
 
-**URL:** `/`  
-**Section container:** `data-testid="hero-section"`
+**URL:** `/wishlist`
+**Page container:** `data-testid="wishlist-page"`
 
 #### Elements
 
 | Selector | Element | Description |
 |----------|---------|-------------|
-| `hero-section` | Section wrapper | Main hero area |
-| `hero-subtitle` | Subtitle text | Text: "Engineering Excellence" |
-| `nav-bar` | Navigation bar | Top nav with links and auth controls; brand text **Test Track Express** |
-| `nav-form-link` | Expo link | Link to `/form`, text: "Expo" |
-| `nav-login-btn` | Sign In button | Link to `/login`, visible when logged out |
-| `logged-in-user` | User display | Text: "Signed in as {username}", visible when logged in |
-| `logout-btn` | Sign Out button | Visible when logged in |
-| `start-engine-btn` | CTA button | Link to `/schedule`, text: "Development Timeline" |
-| `pit-stop-btn` | CTA button | Link to `/team`, text: "Engineering Team" |
-| Hero image | `img` | `alt="Race car engineering prototype"` |
+| `wishlist-page` | Page wrapper | |
+| `back-to-shop` | Back link | Links to `/` |
+| `wishlist-total` | Item count | Text: "{n} items" |
+| `empty-wishlist` | Empty state | Shown when wishlist is empty |
+| `wishlist-card-{n}` | Wishlist item card | Zero-indexed |
+| `wishlist-name-{n}` | Item name | Zero-indexed |
+| `wishlist-price-{n}` | Item price | Zero-indexed |
+| `wishlist-to-cart-{n}` | Add to Cart button | Zero-indexed, only for in-stock |
+| `wishlist-remove-btn-{n}` | Remove button | Zero-indexed |
+| `clear-wishlist-btn` | Clear all button | Shown when the wishlist has items; not rendered on empty state — do not wait unbounded for it in automation. |
 
 #### Scenarios
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 1.1 | Hero renders | Navigate to `/`. | `hero-section`, `nav-bar` contains "Test Track Express", and `hero-subtitle` ("Engineering Excellence") are visible. |
-| 1.2 | CTA navigation | Click `start-engine-btn`. | Navigates to `/schedule`. Go back. Click `pit-stop-btn` → navigates to `/team`. |
-| 1.3 | Hero image loads | Check hero image element. | Image is visible with valid `src` attribute. |
-| 1.4 | Nav links | Check `nav-bar` links. | Contains links to Timeline, Team, and Expo. Click `nav-form-link` → navigates to `/form`. |
+| 5.1 | Empty wishlist | Navigate to `/wishlist` with no items. | `empty-wishlist` is visible. |
+| 5.2 | Wishlist with items | Add items via heart icon, navigate to `/wishlist`. | `wishlist-card-0` is visible. |
+| 5.3 | Add to cart from wishlist | Click `wishlist-to-cart-0`. | `cart-count` increments in navbar. |
+| 5.4 | Remove from wishlist | Click `wishlist-remove-btn-0`. | Item disappears. `wishlist-total` decrements. |
+| 5.5 | Clear wishlist | Click `clear-wishlist-btn`. | `empty-wishlist` appears. |
 
 ---
 
-### 2. Home Page Layout (no inline application form)
+### 6. Account Page
 
-The **inline application / registration form was removed** from `/`. Multi-field registration lives only on **`/form`** (Motorsport Engineering Expo — see §0.6).
-
-On `/`, after the hero, the home page continues with the **Engineering Dashboard** (§3) and **Component Registry** (§4).
-
-#### Scenarios
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 2.1 | Engineering Dashboard visible | Navigate to `/`. Scroll to `interactive-section`. | Visible heading **"Engineering Dashboard"**, `counter-card`, `toggle-card`, `list-card` present. |
-| 2.2 | Component registry visible | Scroll to `table-section`. | `standings-table`, `table-row-0`–`table-row-4`, `table-count` shows **"5 components"**. |
-| 2.3 | Default test sessions | On `interactive-section`, check list card. | `list-item-0`–`2` default labels, `item-count` shows **"3 sessions"**. |
-
----
-
-### 3. Engineering Dashboard (Interactive Section)
-
-**URL:** `/` (scroll to interactive section)  
-**Section container:** `data-testid="interactive-section"`  
-**Section heading (visible):** "Engineering Dashboard"
-
----
-
-#### 3a. Design Iteration Counter
-
-**Card container:** `data-testid="counter-card"`
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `counter-value` | Counter display | Default: "0" |
-| `increment-btn` | "+" button | Increments counter by 1 |
-| `decrement-btn` | "−" button | Decrements counter by 1 |
-| `reset-counter-btn` | Reset button | Resets counter to 0 |
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 3a.1 | Starts at 0 | Load page. | `counter-value` text is "0". |
-| 3a.2 | Increment | Click `increment-btn` 3 times. | `counter-value` is "3". |
-| 3a.3 | Decrement | From 3, click `decrement-btn` once. | `counter-value` is "2". |
-| 3a.4 | Reset | Click `reset-counter-btn`. | `counter-value` is "0". |
-
----
-
-#### 3b. Active Aero Toggle
-
-**Card container:** `data-testid="toggle-card"`
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `drs-toggle` | Toggle switch | Toggles active aero on/off |
-| `drs-status` | Status text | "Active Aero Standby" or "Active Aero Engaged" |
-| `toast-btn` | Diagnostic button | Text: "Run Diagnostic". Triggers toast |
-| `toast-notification` | Toast message | Text: "All systems nominal — diagnostics passed." Auto-dismisses after 3 seconds. |
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 3b.1 | Starts inactive | Load page. | `drs-status` contains "Standby". |
-| 3b.2 | Toggle on | Click `drs-toggle`. | `drs-status` contains "Engaged". |
-| 3b.3 | Toggle off | Click `drs-toggle` again. | `drs-status` reverts to "Standby". |
-| 3b.4 | Toast notification | Click `toast-btn`. | `toast-notification` appears. Wait 3s → it disappears. |
-
----
-
-#### 3c. Test Schedule List
-
-**Card container:** `data-testid="list-card"`
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `add-item-input` | Text input | Placeholder: "Add test session..." |
-| `add-item-btn` | Add button | Adds item from input |
-| `list-item-{n}` | List item | Zero-indexed. Default items: "Wind Tunnel Test" (0), "CFD Analysis" (1), "Dyno Calibration" (2) |
-| `remove-item-{n}` | Remove button | "✕" button on each list item |
-| `item-count` | Count display | Text: "{n} sessions" |
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 3c.1 | Default items | Load page. | 3 items present: `list-item-0` ("Wind Tunnel Test"), `list-item-1` ("CFD Analysis"), `list-item-2` ("Dyno Calibration"). `item-count` shows "3 sessions". |
-| 3c.2 | Add item | Type "Crash Test" in `add-item-input`, click `add-item-btn`. | `list-item-3` appears with "Crash Test". `item-count` shows "4 sessions". |
-| 3c.3 | Add via Enter | Type "Tire Test" in `add-item-input`, press Enter. | New item appears in list. |
-| 3c.4 | Remove item | Click `remove-item-0`. | `item-count` decrements. First item changes to what was previously second. |
-| 3c.5 | Empty input | Leave `add-item-input` empty, click `add-item-btn`. | `item-count` unchanged. No item added. |
-
----
-
-#### 3d. Performance Metrics (Hover Cards)
-
-**Card container:** `data-testid="hover-card"`
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `telemetry-1` | Downforce card | Hover shows "Downforce: 847 kg" |
-| `telemetry-2` | Power card | Hover shows "Power: 1000 HP" |
-| `telemetry-3` | Weight card | Hover shows "Weight: 798 kg" |
-| `hover-info` | Info display | Default: "Hover for details". Updates on hover. |
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 3d.1 | Default text | Load page. | `hover-info` text is "Hover for details". |
-| 3d.2 | Hover downforce | Hover over `telemetry-1`. | `hover-info` shows "Downforce: 847 kg". |
-| 3d.3 | Hover power | Hover over `telemetry-2`. | `hover-info` shows "Power: 1000 HP". |
-| 3d.4 | Hover weight | Hover over `telemetry-3`. | `hover-info` shows "Weight: 798 kg". |
-| 3d.5 | Mouse leave | Move mouse away from all telemetry cards. | `hover-info` reverts to "Hover for details". |
-
----
-
-#### 3e. Engineering Brief Modal
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `open-modal-btn` | Open button | Text: "Engineering Brief" |
-| `modal-overlay` | Overlay backdrop | Clicking it closes the modal |
-| `modal-content` | Modal body | Contains engineering update text about "Aero package revision B3" |
-| `close-modal-btn` | Close button | Text: "Acknowledged" |
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 3e.1 | Open modal | Click `open-modal-btn`. | `modal-overlay` and `modal-content` are visible. |
-| 3e.2 | Modal content | Read modal text. | Contains "Aero package revision B3". |
-| 3e.3 | Close via button | Click `close-modal-btn`. | `modal-overlay` removed from DOM. |
-| 3e.4 | Close via overlay | Open modal, click `modal-overlay` (outside `modal-content`). | Modal closes. |
-
----
-
-### 4. Component Registry Table
-
-**URL:** `/` (scroll to table section)  
-**Section container:** `data-testid="table-section"`
-
-#### Table Data (5 rows)
-
-| # | Component | Subsystem | Weight (kg) | Status |
-|---|-----------|-----------|-------------|--------|
-| 1 | Front Wing Assembly | Aerodynamics | 12.4 | Validated |
-| 2 | Rear Diffuser v3 | Aerodynamics | 8.7 | Testing |
-| 3 | Carbon Monocoque | Chassis | 42.1 | Validated |
-| 4 | Hybrid Power Unit | Powertrain | 150.0 | In Development |
-| 5 | Pushrod Suspension | Suspension | 18.3 | Revision |
+**URL:** `/account`
+**Page container:** `data-testid="account-page"`
 
 #### Elements
 
 | Selector | Element | Description |
 |----------|---------|-------------|
-| `standings-table` | Table | Main table element |
-| `table-filter` | Filter input | Placeholder: "Search component or subsystem..." |
-| `table-count` | Count display | Text: "{n} components" |
-| `sort-pos` | Sort by # header | Toggles ascending/descending sort by position |
-| `sort-points` | Sort by Weight header | Toggles ascending/descending sort by weight |
-| `table-row-{n}` | Table row | Zero-indexed row in current sort/filter |
-| `driver-name-{n}` | Component name cell | Zero-indexed |
-| `status-{n}` | Status badge | Zero-indexed. Values: "Validated", "Testing", "In Development", "Revision" |
+| `account-page` | Page wrapper | |
+| `account-login-prompt` | Login prompt | Shown when not logged in |
+| `account-username` | Username display | Shows "Signed in as {username}" |
+| `wishlist-item-count` | Wishlist count | Text: "{n} items" |
+| `empty-wishlist` | Empty state | Shown when no wishlisted items |
+| `wishlist-item-{n}` | Wishlist item | Zero-indexed |
+| `wishlist-item-name-{n}` | Item name | Zero-indexed |
+| `wishlist-item-price-{n}` | Item price | Zero-indexed |
+| `wishlist-add-to-cart-{n}` | Add to Cart button | Zero-indexed |
+| `wishlist-remove-{n}` | Remove button | Zero-indexed |
+| `clear-wishlist-btn` | Clear all button | |
 
 #### Scenarios
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 4.1 | Table renders | Load page, scroll to table. | `table-row-0` through `table-row-4` present. `table-count` shows "5 components". |
-| 4.2 | Filter by component | Type "diffuser" in `table-filter`. | 1 row remains. `table-count` shows "1 components". |
-| 4.3 | Filter by subsystem | Type "Aerodynamics" in `table-filter`. | 2 rows remain. `table-count` shows "2 components". |
-| 4.4 | Clear filter | Clear `table-filter`. | 5 rows restored. |
-| 4.5 | Sort by # | Click `sort-pos`. | Rows reorder by position (toggles asc/desc). |
-| 4.6 | Sort by Weight | Click `sort-points`. | Rows reorder by weight (toggles asc/desc). |
-| 4.7 | Status badges | Check badge values. | `status-0`: "Validated", `status-1`: "Testing", `status-3`: "In Development", `status-4`: "Revision". |
-
----
-
-### 5. Development Timeline Page
-
-**URL:** `/schedule`  
-**Page container:** `data-testid="schedule-page"`
-
-#### Milestone Data (8 items)
-
-| Phase | Name | Facility | Date | Status |
-|-------|------|----------|------|--------|
-| 01 | Concept Design Review | Wind Tunnel Lab A | Jan 15 | Completed |
-| 02 | CFD Simulation Batch | HPC Cluster | Feb 5 | Completed |
-| 03 | Monocoque Layup | Composites Workshop | Mar 1 | Completed |
-| 04 | Powertrain Integration | Dyno Cell 3 | Apr 10 | Upcoming |
-| 05 | Suspension Rig Testing | Seven-Post Rig | May 2 | Upcoming |
-| 06 | Full Car Assembly | Build Bay 1 | Jun 8 | Upcoming |
-| 07 | Shakedown Run | Private Test Circuit | Jul 14 | Upcoming |
-| 08 | Homologation Sign-Off | FIA Technical Dept. | Aug 1 | Upcoming |
-
-#### Elements
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `schedule-page` | Page wrapper | Confirms page loaded |
-| `schedule-title` | Page title | Text: "Development Timeline" |
-| `schedule-nav` | Nav bar | Contains back and team links |
-| `back-home-link` | Back link | Href: `/` |
-| `nav-team-link` | Team link | Href: `/team` |
-| `race-{n}` | Milestone row | Zero-indexed (0–7) |
-| `race-round-{n}` | Phase number | Padded: "01"–"08" |
-| `race-name-{n}` | Milestone name | e.g. "Concept Design Review" |
-| `race-date-{n}` | Date | e.g. "Jan 15" |
-| `race-status-{n}` | Status badge | "Completed" or "Upcoming" |
-
-#### Scenarios
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 5.1 | Page renders | Navigate to `/schedule`. | `schedule-page` is visible. |
-| 5.2 | Title | Check `schedule-title`. | Text is "Development Timeline". |
-| 5.3 | 8 milestones | Check row elements. | `race-0` through `race-7` are present. |
-| 5.4 | Milestone names | Check first and last. | `race-name-0`: "Concept Design Review". `race-name-7`: "Homologation Sign-Off". |
-| 5.5 | Status values | Check status badges. | `race-status-0`: "Completed". `race-status-3`: "Upcoming". |
-| 5.6 | Navigation | Check links. | `back-home-link` → `/`. `nav-team-link` → `/team`. |
-
----
-
-### 6. Engineering Team Page
-
-**URL:** `/team`  
-**Page container:** `data-testid="team-page"`
-
-#### Team Data (6 members)
-
-| Index | Name | Role | Number | Bio (contains) |
-|-------|------|------|--------|-----------------|
-| 0 | Marcus Webb | Lead Driver | #07 | "Three-time champion" |
-| 1 | Sofia Chen | Test Driver | #22 | "Development driver" |
-| 2 | James Thornton | Technical Director | — | "Former aerodynamicist" |
-| 3 | Dr. Aisha Patel | Chief Aerodynamicist | — | "computational fluid dynamics" |
-| 4 | Luca Moretti | Head of Powertrain | — | "hybrid power unit" |
-| 5 | Yuki Tanaka | Head of Vehicle Dynamics | — | "suspension kinematics" |
-
-#### Elements
-
-| Selector | Element | Description |
-|----------|---------|-------------|
-| `team-page` | Page wrapper | Confirms page loaded |
-| `team-title` | Page title | Text: "Engineering Team" |
-| `team-nav` | Nav bar | Contains back and schedule links |
-| `back-home-link` | Back link | Href: `/` |
-| `nav-schedule-link` | Schedule link | Href: `/schedule` |
-| `team-member-{n}` | Member card | Zero-indexed (0–5) |
-| `member-name-{n}` | Member name | e.g. "Marcus Webb" |
-| `member-role-{n}` | Member role | e.g. "Lead Driver" |
-| `member-number-{n}` | Driver number | Only exists for indices 0 (`#07`) and 1 (`#22`). Does NOT exist for indices 2–5. |
-| `member-bio-{n}` | Member bio | Full bio text |
-
-#### Scenarios
-
-| # | Scenario | Steps | Expected Result |
-|---|----------|-------|-----------------|
-| 6.1 | Page renders | Navigate to `/team`. | `team-page` is visible. |
-| 6.2 | Title | Check `team-title`. | Text is "Engineering Team". |
-| 6.3 | 6 members | Check card elements. | `team-member-0` through `team-member-5` present. |
-| 6.4 | Member names | Check names. | `member-name-0`: "Marcus Webb". `member-name-1`: "Sofia Chen". |
-| 6.5 | Member roles | Check roles. | `member-role-0`: "Lead Driver". `member-role-2`: "Technical Director". |
-| 6.6 | Driver numbers | Check number badges. | `member-number-0`: "#07". `member-number-1`: "#22". `member-number-2` should NOT exist. |
-| 6.7 | Bios | Check bio content. | `member-bio-0` contains "Three-time champion". |
-| 6.8 | Navigation | Check links. | `back-home-link` → `/`. `nav-schedule-link` → `/schedule`. |
+| 6.1 | Not logged in | Navigate to `/account` without login. | `account-login-prompt` is visible. |
+| 6.2 | Logged in | Login, navigate to `/account`. | `account-username` shows username. |
+| 6.3 | Wishlist on account | Add items to wishlist, login, go to `/account`. | Wishlisted items shown. |
+| 6.4 | Add to cart | Click `wishlist-add-to-cart-0`. | `cart-count` increments. |
+| 6.5 | Remove from wishlist | Click `wishlist-remove-0`. | Item disappears. |
 
 ---
 
 ### 7. Footer
 
-**URL:** `/` (bottom of page)  
+**URL:** `/` (bottom of page)
 **Container:** `data-testid="footer"`
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 7.1 | Footer renders | Scroll to bottom of `/`. | `footer` is visible. Contains copyright line: **"© All rights reserved."** |
+| 7.1 | Footer renders | Scroll to bottom of `/`. | `footer` is visible. Contains Qase demo disclaimer (e.g. "This is a Qase demonstration application..."). |
 
 ---
 
@@ -425,12 +385,14 @@ On `/`, after the hero, the home page continues with the **Engineering Dashboard
 
 | # | Scenario | Steps | Expected Result |
 |---|----------|-------|-----------------|
-| 8.1 | Home | Navigate to `/`. | `hero-section` is visible. |
+| 8.1 | Home/Shop | Navigate to `/`. | `shop-page` is visible. |
 | 8.2 | Login | Navigate to `/login`. | `login-page` is visible. |
-| 8.3 | Form | Navigate to `/form`. | `automation-form-page` is visible. |
-| 8.4 | Schedule | Navigate to `/schedule`. | `schedule-page` is visible. |
-| 8.5 | Team | Navigate to `/team`. | `team-page` is visible. |
-| 8.6 | 404 | Navigate to `/nonexistent`. | 404 content renders. |
+| 8.3 | Product Detail | Navigate to `/product/prod-001`. | `product-detail-page` is visible. |
+| 8.4 | Cart | Navigate to `/cart`. | `cart-page` is visible. |
+| 8.5 | Checkout | Navigate to `/checkout`. | `checkout-page` is visible. |
+| 8.6 | Account | Navigate to `/account`. | `account-page` is visible. |
+| 8.7 | Wishlist | Navigate to `/wishlist`. | `wishlist-page` is visible. |
+| 8.8 | 404 | Navigate to `/nonexistent`. | 404 content renders. |
 
 ---
 
@@ -441,17 +403,23 @@ All `data-testid` values across the app, grouped by page:
 ### `/login`
 `login-page`, `login-form`, `username-input`, `password-input`, `login-btn`, `login-error`, `skip-login-btn`
 
-### `/form`
-`automation-form-page`, `automation-form`, `back-home-btn`, `first-name-input`, `last-name-input`, `email-input`, `phone-input`, `address-input`, `city-input`, `state-input`, `zip-input`, `submit-form-btn`, `clear-form-btn`, `form-success`, `submitted-firstName`, `submitted-lastName`, `submitted-email`, `submitted-phone`, `submitted-address`, `submitted-city`, `submitted-state`, `submitted-zipCode`, `reset-form-btn`
+### `/` (Shop)
+`shop-page`, `hero-section`, `hero-subtitle`, `nav-bar`, `nav-logo`, `nav-login-btn`, `nav-cart-link`, `nav-wishlist-link`, `nav-account-link`, `logged-in-user`, `logout-btn`, `cart-count`, `wishlist-count`, `search-input`, `sort-select`, `category-filters`, `category-all`, `category-balls`, `category-apparel`, `category-footwear`, `category-accessories`, `product-count`, `product-grid`, `product-card-{n}`, `product-name-{n}`, `product-price-{n}`, `product-category-{n}`, `product-rating-{n}`, `product-image-{n}`, `product-link-{n}`, `add-to-cart-btn-{n}`, `out-of-stock-{n}`, `wishlist-btn-{n}`, `no-results`, `footer`
 
-### `/` (Home)
-`hero-section`, `hero-subtitle`, `nav-bar`, `nav-form-link`, `nav-login-btn`, `logged-in-user`, `logout-btn`, `start-engine-btn`, `pit-stop-btn`, `interactive-section`, `counter-card`, `counter-value`, `increment-btn`, `decrement-btn`, `reset-counter-btn`, `toggle-card`, `drs-toggle`, `drs-status`, `toast-btn`, `toast-notification`, `list-card`, `add-item-input`, `add-item-btn`, `list-item-{n}`, `remove-item-{n}`, `item-count`, `hover-card`, `telemetry-1`, `telemetry-2`, `telemetry-3`, `hover-info`, `open-modal-btn`, `modal-overlay`, `modal-content`, `close-modal-btn`, `table-section`, `standings-table`, `table-filter`, `table-count`, `sort-pos`, `sort-points`, `table-row-{n}`, `driver-name-{n}`, `status-{n}`, `footer`
+### `/product/:id`
+`product-detail-page`, `back-to-shop`, `detail-product-image`, `detail-product-name`, `detail-category`, `detail-price`, `detail-description`, `detail-rating`, `size-selector`, `size-option-{size}`, `color-selector`, `color-option-{color}`, `quantity-selector`, `decrease-quantity`, `quantity-value`, `increase-quantity`, `detail-add-to-cart`, `detail-out-of-stock`, `detail-wishlist-btn`, `added-to-cart-message`
 
-### `/schedule`
-`schedule-page`, `schedule-nav`, `schedule-title`, `back-home-link`, `nav-team-link`, `race-{n}`, `race-round-{n}`, `race-name-{n}`, `race-date-{n}`, `race-status-{n}`
+### `/cart`
+`cart-page`, `back-to-shop`, `cart-total-items`, `empty-cart`, `cart-item-{n}`, `cart-item-name-{n}`, `cart-item-price-{n}`, `cart-item-quantity-{n}`, `cart-increase-{n}`, `cart-decrease-{n}`, `remove-cart-item-{n}`, `cart-summary`, `cart-subtotal`, `cart-shipping`, `cart-total`, `checkout-btn`, `clear-cart-btn`
 
-### `/team`
-`team-page`, `team-nav`, `team-title`, `back-home-link`, `nav-schedule-link`, `team-member-{n}`, `member-name-{n}`, `member-role-{n}`, `member-number-{n}`, `member-bio-{n}`
+### `/checkout`
+`checkout-page`, `back-to-cart`, `checkout-form`, `checkout-first-name`, `checkout-last-name`, `checkout-email`, `checkout-phone`, `checkout-address`, `checkout-city`, `checkout-country`, `checkout-zip`, `checkout-card-number`, `checkout-expiry`, `checkout-cvv`, `place-order-btn`, `checkout-summary`, `checkout-item-{n}`, `checkout-subtotal`, `checkout-shipping`, `checkout-total`, `order-confirmation`, `order-number`, `confirmed-name`, `confirmed-email`, `confirmed-address`, `order-details`, `continue-shopping-btn`
+
+### `/wishlist`
+`wishlist-page`, `back-to-shop`, `wishlist-total`, `empty-wishlist`, `wishlist-card-{n}`, `wishlist-name-{n}`, `wishlist-price-{n}`, `wishlist-to-cart-{n}`, `wishlist-remove-btn-{n}`, `clear-wishlist-btn`
+
+### `/account`
+`account-page`, `account-login-prompt`, `account-username`, `wishlist-item-count`, `empty-wishlist`, `wishlist-item-{n}`, `wishlist-item-name-{n}`, `wishlist-item-price-{n}`, `wishlist-add-to-cart-{n}`, `wishlist-remove-{n}`, `clear-wishlist-btn`
 
 ---
 

@@ -9,7 +9,7 @@ const config = {
     { name: 'full-regression', testMatch: /full-regression\.spec\.js/ },
   ],
   use: {
-    baseURL: 'https://test-track-express.lovable.app',
+    baseURL: 'https://gameday-gear.lovable.app',
     screenshot: 'on',
     video: 'on',
     /** Richer failure evidence in Qase when uploadAttachments is true */
@@ -25,7 +25,7 @@ const config = {
           api: {
             token: process.env.QASE_TESTOPS_API_TOKEN || process.env.QASE_API_TOKEN,
           },
-          project: 'TTE',
+          project: 'DAT',
           uploadAttachments: true,
           showPublicReportLink: true,
           run: {

@@ -41,14 +41,15 @@ npx playwright test --project=full-regression
 | **Attachments** | `uploadAttachments: true` — failure media uploaded to the run |
 | **Public report link** | `showPublicReportLink: true` — link printed at end of run |
 
-Console lines prefixed with **`[Test Track QA]`** appear in CI logs and help correlate steps with the recording.
+Console lines prefixed with **`[GameDay QA]`** appear in CI logs and help correlate steps with the recording.
 
 ## Demo-oriented tests
 
-- **`tests/smoke.spec.js`** — Short checks (~6 scenarios), large visible pauses, `test.step` titles in the report.
-- **`tests/core-regression.spec.js` / `full-regression.spec.js`** — Broad coverage; each suite includes **one intentional failure** with an explicit error message (timeline phase count vs. registry “Titanium” rule) so Qase shows a realistic defect with a clear description.
+- **`tests/smoke.spec.js`** — Short checks (~6 scenarios) including **add-to-cart → nav cart** and visible pauses / `test.step` titles.
+- **`tests/full-regression.spec.js`** — Includes a **full guest purchase E2E** (search → product detail → cart → checkout → place order → confirmation).
+- **`tests/core-regression.spec.js` / `full-regression.spec.js`** — Broad coverage for [GameDay Gear](https://gameday-gear.lovable.app); each suite includes **one intentional failure** with an explicit message (catalog size rule vs. fictional “Pro Carbon Cricket Bat” SKU) for Qase demos.
 
-To remove demo failures later, delete or rewrite those two tests (search for `Roadmap must list nine` and `Titanium skid block`).
+To remove demo failures later, delete or rewrite those two tests (search for `nine products` and `Pro Carbon Cricket Bat`).
 
 ## Optional: flaky marking
 
