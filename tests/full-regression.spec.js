@@ -16,15 +16,6 @@ import {
 async function fillCheckoutForm(page) {
   await page.getByTestId('checkout-first-name').fill('Mike');
   await page.getByTestId('checkout-last-name').fill('James');
-  await page.getByTestId('checkout-email').fill('mike@test.com');
-  await page.getByTestId('checkout-phone').fill('555-0100');
-  await page.getByTestId('checkout-address').fill('1 Main St');
-  await page.getByTestId('checkout-city').fill('NYC');
-  await page.getByTestId('checkout-country').fill('USA');
-  await page.getByTestId('checkout-zip').fill('10001');
-  await page.getByTestId('checkout-card-number').fill('4111111111111111');
-  await page.getByTestId('checkout-expiry').fill('12/30');
-  await page.getByTestId('checkout-cvv').fill('123');
 }
 
 /* ——— Login ——— */
@@ -416,15 +407,6 @@ test.describe('Checkout', () => {
     await page.goto('/checkout');
     await page.getByTestId('checkout-first-name').fill('John');
     await page.getByTestId('checkout-last-name').fill('Wilson');
-    await page.getByTestId('checkout-email').fill('john@test.com');
-    await page.getByTestId('checkout-phone').fill('555');
-    await page.getByTestId('checkout-address').fill('St');
-    await page.getByTestId('checkout-city').fill('City');
-    await page.getByTestId('checkout-country').fill('US');
-    await page.getByTestId('checkout-zip').fill('12345');
-    await page.getByTestId('checkout-card-number').fill('4111111111111111');
-    await page.getByTestId('checkout-expiry').fill('01/31');
-    await page.getByTestId('checkout-cvv').fill('321');
     await page.getByTestId('place-order-btn').click();
     await recordPause(page);
     await expect(page.getByTestId('continue-shopping-btn')).toBeVisible({ timeout: 15000 });

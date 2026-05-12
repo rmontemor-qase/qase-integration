@@ -264,15 +264,6 @@ All interactive elements use `data-testid` attributes for reliable selector targ
 | `checkout-form` | Form | `form` | — | — |
 | `checkout-first-name` | First Name | `input[type="text"]` | First Name | "John" |
 | `checkout-last-name` | Last Name | `input[type="text"]` | Last Name | "Smith" |
-| `checkout-email` | Email | `input[type="email"]` | Email | "john@email.com" |
-| `checkout-phone` | Phone | `input[type="tel"]` | Phone | "555-0123" |
-| `checkout-address` | Address | `input[type="text"]` | Address | "123 Main St" |
-| `checkout-city` | City | `input[type="text"]` | City | "New York" |
-| `checkout-country` | Country | `input[type="text"]` | Country | "USA" |
-| `checkout-zip` | ZIP Code | `input[type="text"]` | ZIP Code | "10001" |
-| `checkout-card-number` | Card Number | `input[type="text"]` | Card Number | "0000 0000 0000 0000" |
-| `checkout-expiry` | Expiry Date | `input[type="text"]` | Expiry Date | "MM/YY" |
-| `checkout-cvv` | CVV | `input[type="text"]` | CVV | "123" |
 | `place-order-btn` | Submit | `button[type="submit"]` | — | Text: "Place Order — {total} credits" |
 | `checkout-summary` | Order summary sidebar | `div` | — | — |
 | `checkout-item-{n}` | Summary item | `div` | — | Zero-indexed |
@@ -287,8 +278,6 @@ All interactive elements use `data-testid` attributes for reliable selector targ
 | `order-confirmation` | Confirmation container | Shown after successful submission |
 | `order-number` | Order number | Random order ID, e.g. "ORD-A1B2C3" |
 | `confirmed-name` | Confirmed name | Shows submitted first + last name |
-| `confirmed-email` | Confirmed email | Shows submitted email |
-| `confirmed-address` | Confirmed address | Shows full address |
 | `continue-shopping-btn` | Continue button | Navigates to `/` |
 | `order-details` | Order details card | Contains confirmation info |
 
@@ -413,7 +402,7 @@ All `data-testid` values across the app, grouped by page:
 `cart-page`, `back-to-shop`, `cart-total-items`, `empty-cart`, `cart-item-{n}`, `cart-item-name-{n}`, `cart-item-price-{n}`, `cart-item-quantity-{n}`, `cart-increase-{n}`, `cart-decrease-{n}`, `remove-cart-item-{n}`, `cart-summary`, `cart-subtotal`, `cart-shipping`, `cart-total`, `checkout-btn`, `clear-cart-btn`
 
 ### `/checkout`
-`checkout-page`, `back-to-cart`, `checkout-form`, `checkout-first-name`, `checkout-last-name`, `checkout-email`, `checkout-phone`, `checkout-address`, `checkout-city`, `checkout-country`, `checkout-zip`, `checkout-card-number`, `checkout-expiry`, `checkout-cvv`, `place-order-btn`, `checkout-summary`, `checkout-item-{n}`, `checkout-subtotal`, `checkout-shipping`, `checkout-total`, `order-confirmation`, `order-number`, `confirmed-name`, `confirmed-email`, `confirmed-address`, `order-details`, `continue-shopping-btn`
+`checkout-page`, `back-to-cart`, `checkout-form`, `checkout-first-name`, `checkout-last-name`, `place-order-btn`, `checkout-summary`, `checkout-item-{n}`, `checkout-subtotal`, `checkout-shipping`, `checkout-total`, `order-confirmation`, `order-number`, `confirmed-name`, `order-details`, `continue-shopping-btn`
 
 ### `/wishlist`
 `wishlist-page`, `back-to-shop`, `wishlist-total`, `empty-wishlist`, `wishlist-card-{n}`, `wishlist-name-{n}`, `wishlist-price-{n}`, `wishlist-to-cart-{n}`, `wishlist-remove-btn-{n}`, `clear-wishlist-btn`
