@@ -1,0 +1,19 @@
+automation-guide.md
+  s_5c4e9af17ded37::t_3e0a94f5ba075f 405
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "3e55995c415a36a36a45a0c8f158bfab575ffa69",
+  "prompts": {},
+  "sessions": {
+    "s_5c4e9af17ded37": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "0c4b4d90-6c3f-4cff-b150-7221fe08a113",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "rmontemor-qase <rmontemor@qase.io>"
+    }
+  }
+}
