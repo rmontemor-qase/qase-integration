@@ -1,4 +1,19 @@
 require('dotenv').config();
+const { execSync } = require('child_process');
+
+/**
+ * Branch the tests are running from.
+ * In CI, GitHub Actions sets GITHUB_REF_NAME automatically; locally we fall
+ * back to the current git branch.
+ */
+function getBranch() {
+  if (process.env.GITHUB_REF_NAME) return process.env.GITHUB_REF_NAME;
+  try {
+    return execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+  } catch {
+    return 'unknown';
+  }
+}
 
 const config = {
   workers: 8,
@@ -30,6 +45,16 @@ const config = {
           showPublicReportLink: true,
           run: {
             complete: true,
+          },
+          /**
+           * Send the git branch as a Qase configuration. This only takes effect
+           * when the reporter CREATES the run (i.e. local runs). In CI the run
+           * is pre-created and passed via QASE_TESTOPS_RUN_ID, so the branch is
+           * attached by the workflow's API step instead.
+           */
+          configurations: {
+            values: [{ name: 'Branch', value: getBranch() }],
+            createIfNotExists: true,
           },
         },
         framework: {

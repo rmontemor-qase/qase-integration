@@ -52,6 +52,9 @@ jobs:
       # the run is still open, so the configuration attaches cleanly.
       - name: Attach branch and workflow link to Qase run
         if: inputs.qase_run_id != ''
+        # Metadata is a nice-to-have; never fail the whole job (and block the
+        # tests) if attaching it doesn't work.
+        continue-on-error: true
         env:
           # Full-access API token (NOT the Reporter App token) — updating an
           # existing run requires elevated permissions the App token lacks.
@@ -60,6 +63,10 @@ jobs:
           QASE_RUN_ID: ${{ inputs.qase_run_id }}
         run: |
           set -euo pipefail
+          if [ -z "${QASE_API_TOKEN:-}" ]; then
+            echo "::warning::QASE_ADMIN_API_TOKEN secret is not set — skipping branch/link attach."
+            exit 0
+          fi
           API="https://api.qase.io/v1"
           BRANCH="${GITHUB_REF_NAME}"
           RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
