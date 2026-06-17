@@ -27,11 +27,13 @@ jobs:
       QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
       QASE_TESTOPS_RUN_COMPLETE: true
       QASE_TESTOPS_RUN_TITLE: "Manual ${{ inputs.suite }} run — ${{ github.ref_name }}"
-      # Send the branch and a link to this workflow run as Qase configurations.
-      # Comma-separated group=value pairs; createIfNotExists makes the groups/
-      # values on the fly so nothing needs to be pre-created in Qase.
+      # Branch goes in as a Qase configuration — a clean, repeating dimension.
       QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS: true
-      QASE_TESTOPS_CONFIGURATIONS_VALUES: "Branch=${{ github.ref_name }},Workflow=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      QASE_TESTOPS_CONFIGURATIONS_VALUES: "Branch=${{ github.ref_name }}"
+      # The workflow link goes in the run description, which renders markdown, so
+      # it shows as a clickable "GitHub Build" label instead of a raw URL.
+      # (Configuration values are plain text and can't be custom-labelled links.)
+      QASE_TESTOPS_RUN_DESCRIPTION: "[GitHub Build](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
 
     steps:
       - name: Checkout code
