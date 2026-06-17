@@ -1,0 +1,29 @@
+.github/workflows/core-regression.yml
+  s_a21cb6a4c76cc6::t_c16a248291c623 66-69
+  s_a21cb6a4c76cc6::t_7e789c17d83879 55-57
+.github/workflows/full-regression.yml
+  s_a21cb6a4c76cc6::t_2c710c735d32e4 55-57
+  s_a21cb6a4c76cc6::t_b0d802e8ae7083 66-69
+.github/workflows/smoke-tests.yml
+  s_a21cb6a4c76cc6::t_6b0bfb1bddf5a2 55-57
+  s_a21cb6a4c76cc6::t_2f081ba5e54597 66-69
+playwright.config.js
+  s_a21cb6a4c76cc6::t_cb5056ab4f2de8 49-58
+  s_a21cb6a4c76cc6::t_6b3194407d2cb5 2-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "5c15ea2a7734ff82832c4a6ead004f088b66af7d",
+  "prompts": {},
+  "sessions": {
+    "s_a21cb6a4c76cc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "aded9dab-2793-41c7-96df-bfb2bd4ee6cd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "rmontemor-qase <rmontemor@qase.io>"
+    }
+  }
+}
