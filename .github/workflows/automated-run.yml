@@ -1,9 +1,9 @@
-# Manually-triggered test run — NOT triggered from Qase.
+# Automated test run, triggered on demand from GitHub (not from Qase).
 # Because no run id is passed in, the playwright-qase-reporter CREATES the Qase
 # run itself, so run-level configurations are applied at creation. We send the
-# git branch and a link to this workflow run as Qase configurations via the
-# reporter's env vars (no API step / elevated token needed).
-name: Manual Test Run
+# git branch and a link to this workflow run via the reporter's env vars
+# (no API step / elevated token needed).
+name: Automated Test Run
 
 on:
   workflow_dispatch:
@@ -19,14 +19,14 @@ on:
           - full-regression
 
 jobs:
-  manual:
+  automated:
     runs-on: ubuntu-latest
     env:
       QASE_MODE: testops
       QASE_TESTOPS_PROJECT: DAT
       QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
       QASE_TESTOPS_RUN_COMPLETE: true
-      QASE_TESTOPS_RUN_TITLE: "Manual ${{ inputs.suite }} run — ${{ github.ref_name }}"
+      QASE_TESTOPS_RUN_TITLE: "Automated ${{ inputs.suite }} run — ${{ github.ref_name }}"
       # Branch goes in as a Qase configuration — a clean, repeating dimension.
       QASE_TESTOPS_CONFIGURATIONS_CREATE_IF_NOT_EXISTS: true
       QASE_TESTOPS_CONFIGURATIONS_VALUES: "Branch=${{ github.ref_name }}"
@@ -58,7 +58,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: manual-${{ inputs.suite }}-playwright-report
+          name: automated-${{ inputs.suite }}-playwright-report
           path: playwright-report/
           retention-days: 30
 
@@ -66,6 +66,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: manual-${{ inputs.suite }}-test-results
+          name: automated-${{ inputs.suite }}-test-results
           path: test-results/
           retention-days: 30
