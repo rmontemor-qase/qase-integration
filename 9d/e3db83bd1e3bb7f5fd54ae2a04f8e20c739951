@@ -1,0 +1,19 @@
+.github/workflows/manual-run.yml
+  s_a21cb6a4c76cc6::t_9cb03dac5abf54 1-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "9de3db83bd1e3bb7f5fd54ae2a04f8e20c739951",
+  "prompts": {},
+  "sessions": {
+    "s_a21cb6a4c76cc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "aded9dab-2793-41c7-96df-bfb2bd4ee6cd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "rmontemor-qase <rmontemor@qase.io>"
+    }
+  }
+}
