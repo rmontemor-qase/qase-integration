@@ -32,6 +32,13 @@ jobs:
       QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
 
     steps:
+      # Links this GitHub Actions run to the Qase run so the run's "Build"
+      # field shows the workflow-run link + live status. Must be the first step.
+      - name: Link this workflow run to the Qase run
+        uses: cskmnrpt/qase-link-run@v2
+        env:
+          QASE_TESTOPS_API_TOKEN: ${{ env.QASE_TESTOPS_API_TOKEN }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
