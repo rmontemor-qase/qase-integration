@@ -47,6 +47,48 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      # Attach the git branch (as a Qase configuration) and a link back to this
+      # workflow run to the pre-created Qase run. Done before the tests run, while
+      # the run is still open, so the configuration attaches cleanly.
+      - name: Attach branch and workflow link to Qase run
+        if: inputs.qase_run_id != ''
+        env:
+          # Full-access API token (NOT the Reporter App token) — updating an
+          # existing run requires elevated permissions the App token lacks.
+          QASE_API_TOKEN: ${{ secrets.QASE_ADMIN_API_TOKEN }}
+          QASE_PROJECT: ${{ inputs.qase_project_code }}
+          QASE_RUN_ID: ${{ inputs.qase_run_id }}
+        run: |
+          set -euo pipefail
+          API="https://api.qase.io/v1"
+          BRANCH="${GITHUB_REF_NAME}"
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          DESC="Triggered from GitHub Actions ([${GITHUB_WORKFLOW}](${RUN_URL})) on branch \`${BRANCH}\`."
+
+          # Look up the "Branch" configuration group, creating it if missing.
+          CONF=$(curl -fsS -H "Token: ${QASE_API_TOKEN}" "${API}/configuration/${QASE_PROJECT}")
+          GROUP_ID=$(echo "${CONF}" | jq -r '.result.entities[] | select(.title=="Branch") | .id' | head -n1)
+          if [ -z "${GROUP_ID}" ] || [ "${GROUP_ID}" = "null" ]; then
+            GROUP_ID=$(curl -fsS -X POST -H "Token: ${QASE_API_TOKEN}" -H "Content-Type: application/json" \
+              "${API}/configuration/${QASE_PROJECT}/group" -d '{"title":"Branch"}' | jq -r '.result.id')
+          fi
+
+          # Look up the value for this branch within the group, creating it if missing.
+          CONFIG_ID=$(echo "${CONF}" | jq -r --arg b "${BRANCH}" \
+            '.result.entities[] | select(.title=="Branch") | .configurations[] | select(.title==$b) | .id' | head -n1)
+          if [ -z "${CONFIG_ID}" ] || [ "${CONFIG_ID}" = "null" ]; then
+            CONFIG_ID=$(curl -fsS -X POST -H "Token: ${QASE_API_TOKEN}" -H "Content-Type: application/json" \
+              "${API}/configuration/${QASE_PROJECT}" \
+              -d "$(jq -n --arg t "${BRANCH}" --argjson g "${GROUP_ID}" '{title:$t, group_id:$g}')" | jq -r '.result.id')
+          fi
+
+          # Attach the branch configuration and workflow link to the run.
+          curl -fsS -X PATCH -H "Token: ${QASE_API_TOKEN}" -H "Content-Type: application/json" \
+            "${API}/run/${QASE_PROJECT}/${QASE_RUN_ID}" \
+            -d "$(jq -n --arg d "${DESC}" --argjson c "${CONFIG_ID}" '{description:$d, configurations:[$c]}')" > /dev/null
+
+          echo "Attached branch '${BRANCH}' (config ${CONFIG_ID}) and workflow link to Qase run ${QASE_RUN_ID}."
+
       - name: Run smoke tests
         run: npx playwright test --project=smoke
 
